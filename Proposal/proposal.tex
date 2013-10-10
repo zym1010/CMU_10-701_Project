@@ -25,7 +25,19 @@
 % Replace the text between curly brackets with your own
 
 \title{A Template for Your Project Proposal}
-\author{Your group members names here}
+\author{
+		Zexi Mao \\
+		\href{mailto:zexim@andrew.cmu.edu}{zexim@andrew.cmu.edu} \\
+	\and
+		Siqi Tan \\
+		\href{mailto:siqitan@andrew.cmu.edu}{siqitan@andrew.cmu.edu} \\
+	\and
+		Yuchen Wu \\
+		\href{mailto:yuchenw@cs.cmu.edu}{yuchenw@cs.cmu.edu} \\
+	\and
+		Yimeng Zhang \\
+		\href{mailto:yimengzh@cmu.edu}{yimengzh@cmu.edu}
+	}
 \date{\today}
 
 % You can leave out "date" and it will be added automatically for today
@@ -68,7 +80,7 @@ Our ultimate task is to determine whether the accelerometer recordings in the te
 
 
 \section{Methods}
-To transform raw accelerometer data to a form which is more appropriate for the classifiers, a low pass filter (LPF) may be first applied to filter out high frequency noise. Then we may split the 30 million samples in the training set into sequences of 90 thousand according to their DeviceId. After that, we plan to extract three sets of features for classification, namely, time domain features, frequency domain features, and spatial domain features.
+To transform raw accelerometer data to a form which is more appropriate for the classifiers, a low pass filter (LPF) may be first applied to filter out high frequency noise. Then we may split the 30 million samples in the training set into sequences of 300 samples following the pactice of Kaggle. After that, we plan to extract three sets of features for classification, namely, time domain features, frequency domain features, and spatial domain features.
 
 First, we plan to try some methods that make classification based on $C$ binary classifiers, where $C$ is the number of classes (DeviceId in this context). In terms of the binary classifier, we will initially try logistic regression. We choose it because its output can be interpreted as the confidence over classificaton, which is consistent with the evalution criteria. If this doesn't work well, it may be due to that the data points are highly non-linear, and we may try some kernel versions of logistic regression. In addition, probablistic versions of SVM are worth trying.
 
