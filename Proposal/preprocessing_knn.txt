@@ -1,0 +1,4 @@
+To transform raw accelerometer data to a form which is more appropriate for the classifiers, a low pass filter (LPF) will be first applied to filter out high frequency noise. Then we plan to extract three sets of features for classification, namely, time domain features, frequency domain features, and spatial domain features.
+
+
+Third, nearest-neighbor methods will be used to classfy the test cases according to our distance metric. Since we are required to give the confidence of classification, we may use weight versions of $k$-NN methods to accurately express the confidence.
