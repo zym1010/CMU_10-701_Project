@@ -1,4 +1,4 @@
-# Biometric in Motion: You Need This to Know Who You Are
+# Biometric in Motion: Identification Using Acceleration Data
 
         Zexi Mao zexim@andrew.cmu.edu
         Siqi Tan siqitan@andrew.cmu.edu
