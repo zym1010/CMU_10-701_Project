@@ -235,6 +235,19 @@ Convex functions $f(x), g(x)$
 \end{itemize}
 
 
+
+
+
+\section{Duality}
+\textbf{primal problem} (standard form): $\min f_0(x), \text{s.t.} f_i(x) \leq 0, i = 1,\ldots,m, h_i(x)=0, i = 1,\ldots,p$.
+\textbf{Lagrangian}: $\mathbb{R}^n \times \mathbb{R}^m \times \mathbb{R}^p \rightarrow R$, $L(x,\lambda,\nu) = f_0(x) + \sum_i \lambda_i f_i (x) + \sum_i \nu_i h_i(x)$.
+\textbf{Lagrange dual function} $\mathbb{R}^m \times \mathbb{R}^p \rightarrow R$, $g(\lambda, \nu) = \inf_{x \in \mathcal{D}} L(x, \lambda, \nu)$. $g$ is concave (can be $-\infty$ for some $\lambda,\nu$). \textbf{lower bound property} if $\lambda \succeq 0$, $g(\lambda, \nu) \leq p^*$.
+\textbf{Lagrange dual problem} $\max g(\lambda,\nu), \text{s.t.} \lambda \succeq 0$. \textbf{KKT conditions} For $(x^*, \lambda^*, \nu^*)$, we have 1) $f_i(x^*) \leq 0$, 2) $h_i(x^*) = 0$, 3) $\lambda^*_i \geq 0$, 4) $\lambda^*_i f_i(x^*) = 0$, 5) $\nabla_x L(x,\lambda,\nu) = 0$. Or 1) primal constraints; 2) dual constraints; 3) complementary slackness; 4) gradient of Lagrangian with respect to $x$ is zero. If strong duality holds, then optimal $(x^*, \lambda^*, \nu^*)$ must satisfy KKT. For a convex problem, finding $(x^*, \lambda^*, \nu^*)$ satifsying KKT means they're optimal (and proves the problem has strong duality). If Slater's condition is satisfied, $x$ is optimal iff there exists $(\lambda, \nu)$ that satisfy KKT.
+
+\textbf{dual for LP} for standard LP $\min c^T x, \text{s.t.} Ax=b, x \succeq 0$, we have dual $\max -b^T \nu, \text{s.t.} A^T\nu - \lambda + c = 0, \lambda \succeq 0$. for inequality LP $\min c^T x, \text{s.t.} Ax\preceq b$, we have the dual problem $\max -b^T \lambda, \text{s.t.} A^T\lambda + c = 0, \lambda \succeq 0$.
+
+
+
 \rule{0.3\linewidth}{0.25pt}
 \scriptsize
 
