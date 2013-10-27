@@ -158,6 +158,11 @@ Kernel function $k(\vect{x},\vect{x}') = \phi(\vect{x})^T \phi(\vect{x}')$ for s
 
 \textbf{Mercer's Theorem} for any symmtric function $k: \mathcal{X} \times \mathcal{X} \rightarrow \mathbb{R}$ which is square integrable and satisfying $\int_{\mathcal{X} \times \mathcal{X}} k(x,x') f(x) f(x') \mathrm{d}x \mathrm{d}x' \geq 0$ for $f \in L_2(\mathcal{X})$, we have a feature space $\Phi(x)$ and $\vect{\lambda} \geq 0 $ that $k(x,x') = \sum_i \lambda_i \phi_i(x) \phi_i(x')$.
 
+\textbf{new kernel from old ones} Given kernels $k_1(x,x'), k_2(x,x')$,  $ck_1(x,x'), f(x)k_1(x,x')f(x'), k_1(x,x')+k_2(x,x'), k_1(x,x')k_2(x,x')$ are new valid kernels. Proof: 1) write the kernel as the dot product of two vectors; 2) use Mercer's Theorem; 3) any Gram matrix derived from it is positive semidefinite. $k_1(x,x')-k_2(x,x')$ is \textbf{invalid}: let $k_1(x,x')= 1$ for $x=x'$, and $0$ otherwise, and $k_2(x,x') = 2k_1(x,x')$. The Gram matrix of new kernel is not PSD. 
+
+\textbf{PSD matrices} \textbf{Products of two PSD matrices are not always PSD}. Let $A$ be $2\times2$ PSD, and $B$ be $\mathrm{diag}(1,2)$. $AB$ is not PSD (columns scaled differently). \textbf{PSD's eigen decomposition} $A=UDU^T$. $A^{m+1} = AA^m = UDU^T(UD^m U^T) = UD(U^T U)D^m U^T = U D^{m+1} U^T$. \textbf{Any PSD is a covariance matrix} Let $\vect{x}$ be a random vector with covariance $I$, PSD $Q$ is the covariance matrix for $Q^{1/2} \vect{x}$: $\mathrm{cov}(Q^{1/2} \vect{x}) = Q^{1/2} \mathrm{cov}(\vect{x}) Q^{1/2} = Q^{1/2}Q^{1/2} = Q$.
+
+\textbf{examples} polynomial: $(\langle x, x' \rangle + c)^d, c\geq 0$. For $c=0$, it's a polynomial having all terms of order $d$; for $c>0$, it contains all terms of order up to $d$. 
 
 \section{Convexity}
 \textbf{Convex Sets} \\
