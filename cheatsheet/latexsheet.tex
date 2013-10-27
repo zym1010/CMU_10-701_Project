@@ -100,6 +100,9 @@
      \Large{\textbf{10-701\ Cheat Sheet}} \\
 \end{center}
 
+\section{Distributions}
+\textbf{Gaussian}: $\ln\frac{1}{(2\pi)^{D/2}} \frac{1}{|\boldsymbol{\Sigma}|^{1/2}} \exp\left\{-\frac{1}{2}(\vect{x} - \boldsymbol{\mu})^T \boldsymbol{\Sigma}^{-1} (\vect{x} - \boldsymbol{\mu}) \right\}$; \textbf{multinomial}: $p(\vect{x}|\vect{\mu}) = \prod \mu_k^{x_k}$, where only one of $x_i$ is 1, and others are 0; \textbf{binary}: $\mathrm{Bern}(x|\mu) = \mu^x (1-\mu)^{1-x}$; \textbf{binomial}: $\mathrm{Bin}(m|N,\mu) = \binom{N}{m} \mu^m(1-\mu)^{N-m}$, with expectation $N\mu$ and variance $\mu(1-\mu)$. (reduced to binary for $N=1$) 
+
 \section{Non-Parametric}
 MaxLikelihood learning window will give you delta functions, which is a kind of over fitting. Use Leave-one-out cross validation for model selection. Idea: Use some of the data to estimate density; Use other part to evaluate how well it works. Pick the parameter that works best .
 $\log p(x_i|X\backslash\cbr{x_i}) = \log \frac{1}{n-1} \sum_{j \neq i} k(x_i, x_j)$, the sum over all points is $\frac{1}{n} \sum_{i=1}^n \log \sbr{\frac{n}{n-1} p(x_i) - \frac{1}{n-1} k(x_i, x_i)} \text{ where } p(x) = \frac{1}{n} \sum_{i=1}^n k(x_i, x)$.
@@ -138,13 +141,13 @@ $\mathrm{Tr}(\vect{A}) = \sum_i \vect{A}_{ii}$. For two equal sized matrices, $\
 
 
 \section{Classifers and Regressors}
-\emph{Naive Bayes} Conditionally independent: $P(x_1,x_2,\ldots|C) = \prod_i P(x_i|C)$. One way to avoid divide by zero: add $(1,1,\ldots,1)$ and $(0,0,\ldots,0)$ to both classes. 
+\textbf{Naive Bayes} Conditionally independent: $P(x_1,x_2,\ldots|C) = \prod_i P(x_i|C)$. One way to avoid divide by zero: add $(1,1,\ldots,1)$ and $(0,0,\ldots,0)$ to both classes. 
 
-\textbf{Learns} $P(x_i | y)$ for \emph{Discrete $x_i$} -- $P(x_i | y) = \frac{\#D(X_i = x_i, Y = y)}{\#D(Y = y)}$ 
+\emph{Learns} $P(x_i | y)$ for \emph{Discrete $x_i$} -- $P(x_i | y) = \frac{\#D(X_i = x_i, Y = y)}{\#D(Y = y)}$ 
 For smoothing, use $P(x_i | y) = \frac{\#D(X_i = x_i, Y = y) + k}{\#D(Y = y) + n_i k}$, where $n_i$ is the number of different possible values for $X_i$ (In practice problem set, Jing Xiang used $k=1$?)
 \emph{Continuous $x_i$} -- Can use any PDF, but usually use Gaussian $P(x_i | y) = \mathcal{N}(\mu_{X_i | y}, \sigma_{X_i | y}^2)$, where $\mu_{X_i | y}$ and $\sigma_{X_i | y}$ are, respectively, the average and variance of $X_i$ for all data points where $Y = y$. The Gaussian distribution already provides smoothing.
 
-\emph{Perceptron} Produces linear decision boundaries. \emph{Classifies} using $\hat{y} = X_{test}\:w + b$ \emph{Learns} $w$ and $b$ by updating $w$ whenever $y_i (w^T x_i + b) \leq 0$ (i.e. incorrectly classified). Updates as  $w \leftarrow w + x_i y_i, b \leftarrow b + y_i$ Repeat until all examples are correctly classified. $w$ is some linear combination $\sum_{i} \alpha_i x_i (y_i * x_i) $ of data points, and decision boundary is the linear hyperplane $f(x) = w^T x + b$. \textbf{Note} that the perceptron is the same as stochastic gradient descent with a hinge loss function of $max(0, 1 - y_i [<w, x_i> + b])$ (\textbf{we can't remove 1 in the loss function; otherwise we can set $w,b=0$}).
+\textbf{Perceptron} Produces linear decision boundaries. \emph{Classifies} using $\hat{y} = X_{test}\:w + b$ \emph{Learns} $w$ and $b$ by updating $w$ whenever $y_i (w^T x_i + b) \leq 0$ (i.e. incorrectly classified). Updates as  $w \leftarrow w + x_i y_i, b \leftarrow b + y_i$ Repeat until all examples are correctly classified. $w$ is some linear combination $\sum_{i} \alpha_i x_i (y_i * x_i) $ of data points, and decision boundary is the linear hyperplane $f(x) = w^T x + b$. \textbf{Note} that the perceptron is the same as stochastic gradient descent with a hinge loss function of $max(0, 1 - y_i [<w, x_i> + b])$ (\textbf{we can't remove 1 in the loss function; otherwise we can set $w,b=0$}).
 
 \textbf{Convergence of perceptron proof 1} Here we use a perceptron without $b$. Assume we have $\vect{w}^*$ that has margin $\gamma$ ($\min (\vect{w}^*)^T y_i x_i  = \gamma $ ), and $\|\vect{w}^*\| = 1, \|x_i\| = 1$. We start from $\vect{w}_0 = 0$. Assume that we have made $M$ mistakes. We have 1) $\vect{w}_M \cdot \vect{w}^*  = (\vect{w}_{M-1} + y_i x_i)\cdot \vect{w}^* \geq \vect{w}_{M-1} \cdot \vect{w}^* + \gamma$. So we have $\vect{w}_M \cdot \vect{w}^* \geq M \gamma$. 
 
@@ -152,6 +155,9 @@ For smoothing, use $P(x_i | y) = \frac{\#D(X_i = x_i, Y = y) + k}{\#D(Y = y) + n
 
 Combining them, using Cauchy-Schwarz, we have $M\gamma \leq \vect{w}_M \cdot \vect{w}^* \leq \|\vect{w}_M\|  \|\vect{w}^*\| \leq \sqrt{M}$. So $M \leq 1/\gamma^2$.
 \textbf{proof 2} Let potential function $Q_i = \|\vect{w}_i\| - \vect{w}_i \cdot \vect{w}^*$, where $i$ is the number of iterations. Assuming up to iteration $i$, we have $M$ mistakes, so we have $Q_i \leq \sqrt{M} - M\gamma$. Clearly $Q_i \geq 0$ by Cauchy-Schwarz. So we have $\sqrt{M} - M\gamma \geq 0$.
+
+\textbf{Linear Regression} 
+For $y = \vect{\beta}^T \vect{x}$, $\vect{\beta}^* = (X^T X)^{-1} X^T \vect{y}$, where $X \in \mathbb{R}^{n\times d}$. If we add a regularizing term $\lambda \|\vect{\beta}\|^2$, $\vect{\beta}^* = (X^T X + \lambda I)^{-1} X^T \vect{y}$. Kernalized version of ridge regression: $\vect{\alpha}^* = (X X^T + \lambda I )^{-1}y, \vect{\beta}^* = X^T \vect{\alpha}^*$.
 
 \section{Kernel}
 Kernel function $k(\vect{x},\vect{x}') = \phi(\vect{x})^T \phi(\vect{x}')$ for some $\phi(\cdot)$. For a set of data points $\{\vect{x}_i\} $, we have Gram matrix (kernel matrix) $K_{ij} = k(\vect{x}_i, \vect{x}_j)$. A \textbf{necessary and sufficient} condition for being a valid kernel function: $K$ always positive semidefinite. Proof: $\vect{\alpha}^T K \vect{\alpha} = \sum_{ij} \alpha_i \alpha_j K_{ij} = \sum_{ij} \alpha_i \alpha_j \langle \phi(\vect{x}_i), \phi(\vect{x}_j) \rangle = \langle \sum_i \alpha_i \phi(\vect{x}_i),  \sum_j \alpha_j \phi(\vect{x}_j) \rangle \geq 0$.
@@ -162,7 +168,7 @@ Kernel function $k(\vect{x},\vect{x}') = \phi(\vect{x})^T \phi(\vect{x}')$ for s
 
 \textbf{PSD matrices} \textbf{Products of two PSD matrices are not always PSD}. Let $A$ be $2\times2$ PSD, and $B$ be $\mathrm{diag}(1,2)$. $AB$ is not PSD (columns scaled differently). \textbf{PSD's eigen decomposition} $A=UDU^T$. $A^{m+1} = AA^m = UDU^T(UD^m U^T) = UD(U^T U)D^m U^T = U D^{m+1} U^T$. \textbf{Any PSD is a covariance matrix} Let $\vect{x}$ be a random vector with covariance $I$, PSD $Q$ is the covariance matrix for $Q^{1/2} \vect{x}$: $\mathrm{cov}(Q^{1/2} \vect{x}) = Q^{1/2} \mathrm{cov}(\vect{x}) Q^{1/2} = Q^{1/2}Q^{1/2} = Q$.
 
-\textbf{examples} polynomial: $(\langle x, x' \rangle + c)^d, c\geq 0$. For $c=0$, it's a polynomial having all terms of order $d$; for $c>0$, it contains all terms of order up to $d$. 
+\textbf{examples} \textbf{polynomial}: $(\langle x, x' \rangle + c)^d, c\geq 0$. For $c=0$, it's a polynomial having all terms of order $d$; for $c>0$, it contains all terms of order up to $d$. \textbf{gaussian rbf} $\exp(-\lambda\|x-x'\|^2)$. \textbf{laplacian rbf} $\exp(-\lambda|x-x'|^2)$.
 
 \section{Convexity}
 \textbf{Convex Sets} \\
