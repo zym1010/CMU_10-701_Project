@@ -193,7 +193,15 @@ $$ f(\theta x + (1 - \theta) y) \leq \theta f(x) + (1 - \theta) f(y) $$
 \emph{First-order conditions:} Suppose $f$ is differentiable. Then $f$ is convex if and only if $\mathbf{dom} f$ is convex and
 $$ f(y) \geq f(x) + \bigtriangledown f(x)^T (y-x) $$
 
-\emph{Second-order conditions:} Assume that $f$ is twice differentiable
+\emph{Second-order conditions:} Assume that $f$ is twice differentiable. Then $f$ is convex if and only if $\mathbf{dom} f$ is convex and its Hessian is positive semidefinite: for all $x \in \mathbf{dom} f$,
+$$ {\bigtriangledown}^2 f(x) \succeq 0 $$
+
+\emph{Strictly convex:} Whenever $x \neq y$ and $0 < \theta < 1$, we have
+$$ f(\theta x + (1 - \theta) y) < \theta f(x) + (1 - \theta) f(y) $$
+Or
+$$ f(y) > f(x) + \bigtriangledown f(x)^T (y-x) $$
+Or \textbf{sufficient but not necessary condition:}
+$$ {\bigtriangledown}^2 f(x) \succ 0 $$
 
 
 \rule{0.3\linewidth}{0.25pt}
