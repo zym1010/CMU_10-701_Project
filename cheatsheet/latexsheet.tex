@@ -153,6 +153,37 @@ For smoothing, use $P(x_i | y) = \frac{\#D(X_i = x_i, Y = y) + k}{\#D(Y = y) + n
 Combining them, using Cauchy-Schwarz, we have $M\gamma \leq \vect{w}_M \cdot \vect{w}^* \leq \|\vect{w}_M\|  \|\vect{w}^*\| \leq \sqrt{M}$. So $M \leq 1/\gamma^2$.
 \textbf{proof 2} Let potential function $Q_i = \|\vect{w}_i\| - \vect{w}_i \cdot \vect{w}^*$, where $i$ is the number of iterations. Assuming up to iteration $i$, we have $M$ mistakes, so we have $Q_i \leq \sqrt{M} - M\gamma$. Clearly $Q_i \geq 0$ by Cauchy-Schwarz. So we have $\sqrt{M} - M\gamma \geq 0$.
 
+\section{Convexity}
+\textbf{Convex Sets} \\
+\emph{Definition:} A set $C$ is \emph{convex} if the line segment between any two points in $C$ lies in $C$, i.e.\, if for any $x_1, x_2 \in C$ and any $\theta$ with $0 \leq \theta \leq 1$, we have \\
+$$ \theta x_1 + (1 - \theta) x_2 \in C $$
+
+\emph{Examples:}
+\begin{itemize}
+	\item Empty set $\emptyset$, single point ${x_0}$, the whole space $\mathbb{R}^n$
+	\item Hyperplane $\{ x | a^T x = b \}$, halfspaces $\{ x | a^T x \leq b \}$
+	\item Euclidean balls $\{ x | \| x - x_c \|_2 \leq r \}$
+	\item Positive semidefinite marices $S_+^n = \{ A \in S^n | A \succeq 0 \}$ ($S^n$ is the set of symmetric $n \times n$ matrices)
+\end{itemize}
+
+\emph{Convexit preserving set operations:}
+\begin{itemize}
+	\item Translation $\{ x + b | x \in C \}$
+	\item Scaling $\{ \lambda x | x \in C \}$
+	\item Affine function $\{ Ax + b | x \in C\}$
+	\item Intersection $C \cap D$
+	\item Set sum $C + D = \{ x + y | x \in C, y \in D \}$
+\end{itemize}
+
+\textbf{Convex Functions} \\
+\emph{Definition:} A function $f: \mathbb{R}^n \to \mathbb{R}$ is \emph{convex} if $\mathbf{dom} f$ is a convex set and if for all $x$, $y \in \mathbf{dom} f$, and $\theta$ with $0 \leq \theta \leq 1$, we have \\
+$$ f(\theta x + (1 - \theta) y) \leq \theta f(x) + (1 - \theta) f(y) $$
+
+\emph{First-order conditions:} Suppose $f$ is differentiable. Then $f$ is convex if and only if $\mathbf{dom} f$ is convex and
+$$ f(y) \geq f(x) + \bigtriangledown f(x)^T (y-x) $$
+
+\emph{Second-order conditions:} Assume that $f$ is twice differentiable
+
 \rule{0.3\linewidth}{0.25pt}
 \scriptsize
 
