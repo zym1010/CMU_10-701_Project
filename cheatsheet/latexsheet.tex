@@ -153,6 +153,14 @@ For smoothing, use $P(x_i | y) = \frac{\#D(X_i = x_i, Y = y) + k}{\#D(Y = y) + n
 Combining them, using Cauchy-Schwarz, we have $M\gamma \leq \vect{w}_M \cdot \vect{w}^* \leq \|\vect{w}_M\|  \|\vect{w}^*\| \leq \sqrt{M}$. So $M \leq 1/\gamma^2$.
 \textbf{proof 2} Let potential function $Q_i = \|\vect{w}_i\| - \vect{w}_i \cdot \vect{w}^*$, where $i$ is the number of iterations. Assuming up to iteration $i$, we have $M$ mistakes, so we have $Q_i \leq \sqrt{M} - M\gamma$. Clearly $Q_i \geq 0$ by Cauchy-Schwarz. So we have $\sqrt{M} - M\gamma \geq 0$.
 
+
+\section{Kernel}
+Kernel function $k(\vect{x},\vect{x}') = \phi(\vect{x})^T \phi(\vect{x}')$ for some $\phi(\cdot)$. For a set of data points $\{\vect{x}_i\} $, we have Gram matrix (kernel matrix) $K_{ij} = k(\vect{x}_i, \vect{x}_j)$. A \textbf{necessary and sufficient} condition for being a valid kernel function: $K$ always positive semidefinite. Proof: $\vect{\alpha}^T K \vect{\alpha} = \sum_{ij} \alpha_i \alpha_j K_{ij} = \sum_{ij} \alpha_i \alpha_j \langle \phi(\vect{x}_i), \phi(\vect{x}_j) \rangle = \langle \sum_i \alpha_i \phi(\vect{x}_i),  \sum_j \alpha_j \phi(\vect{x}_j) \rangle \geq 0$.
+
+\textbf{Mercer's Theorem} for any symmtric function $k: \mathcal{X} \times \mathcal{X} \rightarrow \mathbb{R}$ which is square integrable and satisfying $\int_{\mathcal{X} \times \mathcal{X}} k(x,x') f(x) f(x') \mathrm{d}x \mathrm{d}x' \geq 0$ for $f \in L_2(\mathcal{X})$, we have a feature space $\Phi(x)$ and $\vect{\lambda} \geq 0 $ that $k(x,x') = \sum_i \lambda_i \phi_i(x) \phi_i(x')$.
+
+
+
 \rule{0.3\linewidth}{0.25pt}
 \scriptsize
 
