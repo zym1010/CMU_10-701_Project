@@ -196,12 +196,37 @@ $$ f(y) \geq f(x) + \bigtriangledown f(x)^T (y-x) $$
 \emph{Second-order conditions:} Assume that $f$ is twice differentiable. Then $f$ is convex if and only if $\mathbf{dom} f$ is convex and its Hessian is positive semidefinite: for all $x \in \mathbf{dom} f$,
 $$ {\bigtriangledown}^2 f(x) \succeq 0 $$
 
-\emph{Strictly convex:} Whenever $x \neq y$ and $0 < \theta < 1$, we have
+\emph{Strict convexity:} Whenever $x \neq y$ and $0 < \theta < 1$, we have
 $$ f(\theta x + (1 - \theta) y) < \theta f(x) + (1 - \theta) f(y) $$
 Or
 $$ f(y) > f(x) + \bigtriangledown f(x)^T (y-x) $$
 Or \textbf{sufficient but not necessary condition:}
 $$ {\bigtriangledown}^2 f(x) \succ 0 $$
+
+\emph{Strong convexity:} There exists an $m > 0$ such that
+$$ f(y) \geq f(x) + \bigtriangledown f(x)^T (y-x) + \frac{m}{2} \| y-x \|_2^2 $$
+Or
+$$ \bigtriangledown^2 f(x) \succeq mI $$
+
+\emph{Convex function examples:}
+\begin{itemize}
+	\item Exponential. $e^{ax}$ is convex on $\mathbb{R}$, for any $a \in \mathbb{R}$
+	\item Powers. $x^a$ is convex on $\mathbb{R}_{++}$ when $a \geq 1$ or $a \leq 0$, and concave for $0 \leq a \leq 1$
+	\item Powers of absolute value. $|x|^p$ for $p \geq 1$ is convex on $\mathbb{R}$
+	\item Logatithm. $\log x$ is concave on $\mathbb{R}_++$
+	\item Norms. Every norm on $\mathbb{R}^n$ is convex
+	\item $f(x) = \max{x_1, ... , x_n}$ is convex on $\mathbb{R}^n$
+	\item Log-sum-exp. $f(x) = \log(e^{x_1} + ... + e^{x_n})$ is convex on $\mathbb{R}^n$
+\end{itemize}
+
+\emph{Convexity preserving function operations}
+Convex functions $f(x), g(x)$
+\begin{itemize}
+	\item Nonnegative weighted sum: $a f(x) + b g(x)$
+	\item Pointwise maximum: $f(x) = \max{f_1(x), ... , f_m(x)}$
+	\item Composition with affine function: $f(Ax+b)$
+	\item Composition with nondecreasin convex function $g$: $g(f(x))$
+\end{itemize}
 
 
 \rule{0.3\linewidth}{0.25pt}
