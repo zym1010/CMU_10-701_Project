@@ -140,10 +140,14 @@ $\frac{\partial}{\partial \vect{A} } (\vect{x} - \vect{A}\vect{s})^T \vect{W} (\
 For smoothing, use $P(x_i | y) = \frac{\#D(X_i = x_i, Y = y) + k}{\#D(Y = y) + n_i k}$, where $n_i$ is the number of different possible values for $X_i$ (In practice problem set, Jing Xiang used $k=1$?)
 \emph{Continuous $x_i$} -- Can use any PDF, but usually use Gaussian $P(x_i | y) = \mathcal{N}(\mu_{X_i | y}, \sigma_{X_i | y}^2)$, where $\mu_{X_i | y}$ and $\sigma_{X_i | y}$ are, respectively, the average and variance of $X_i$ for all data points where $Y = y$. The Gaussian distribution already provides smoothing.
 
-\emph{Perceptron} Produces linear decision boundaries. \emph{Classifies} using $\hat{y} = X_{test}\:w + b$ \emph{Learns} $w$ and $b$ by updating $w$ whenever $y_i (w^T x_i + b) \leq 0$ (i.e. incorrectly classified). Updates as  $w \leftarrow w + x_i y_i, b \leftarrow b + y_i$ Repeat until all examples are correctly classified. $w$ is some linear combination $\sum_{i} \alpha_i x_i (y_i * x_i) $ of data points, and decision boundary is the linear hyperplane $f(x) = w^T x + b$. \textbf{Note} that the perceptron is the same as stochastic gradient descent with a hinge loss function of $max(0, 1 - y_i [<w, x_i> + b])$ (\textbf{is this loss function right}).
+\emph{Perceptron} Produces linear decision boundaries. \emph{Classifies} using $\hat{y} = X_{test}\:w + b$ \emph{Learns} $w$ and $b$ by updating $w$ whenever $y_i (w^T x_i + b) \leq 0$ (i.e. incorrectly classified). Updates as  $w \leftarrow w + x_i y_i, b \leftarrow b + y_i$ Repeat until all examples are correctly classified. $w$ is some linear combination $\sum_{i} \alpha_i x_i (y_i * x_i) $ of data points, and decision boundary is the linear hyperplane $f(x) = w^T x + b$. \textbf{Note} that the perceptron is the same as stochastic gradient descent with a hinge loss function of $max(0, 1 - y_i [<w, x_i> + b])$ (\textbf{we can't remove 1 in the loss function; otherwise we can set $w,b=0$}).
 
-\textbf{Convergence of perceptron proof 1 by holy shit smola}
-\textbf{Convergence of perceptron proof 2 by gordon}
+\textbf{Convergence of perceptron proof 1} Here we use a perceptron without $b$. Assume we have $\vect{w}^*$ that has margin $\gamma$ ($\min (\vect{w}^*)^T y_i x_i  = \gamma $ ), and $\|\vect{w}^*\| = 1, \|x_i\| = 1$. We start from $\vect{w}_0 = 0$. Assume that we have made $M$ mistakes. We have 1) $\vect{w}_M \cdot \vect{w}^*  = (\vect{w}_{M-1} + y_i x_i)\cdot \vect{w}^* \geq \vect{w}_{M-1} \cdot \vect{w}^* + \gamma$. So we have $\vect{w}_M \cdot \vect{w}^* \geq M \gamma$. 
+
+2) $\vect{w}_M \cdot \vect{w}_M = (\vect{w}_{M-1} + y_i x_i)\cdot (\vect{w}_{M-1} + y_i x_i) = \vect{w}_{M-1} \cdot \vect{w}_{M-1} + 2 y_i x_i \cdot \vect{w}_{M-1} + (y_i x_i) \cdot (y_i x_i) \leq  \vect{w}_{M-1} \cdot \vect{w}_{M-1} + 1$. So we have $\vect{w}_M \cdot \vect{w}_M < M$. 
+
+Combining them, using Cauchy-Schwarz, we have $M\gamma \leq \vect{w}_M \cdot \vect{w}^* \leq \|\vect{w}_M\|  \|\vect{w}^*\| \leq \sqrt{M}$. So $M \leq 1/\gamma^2$.
+\textbf{proof 2} Let potential function $Q_i = \|\vect{w}_i\| - \vect{w}_i \cdot \vect{w}^*$, where $i$ is the number of iterations. Assuming up to iteration $i$, we have $M$ mistakes, so we have $Q_i \leq \sqrt{M} - M\gamma$. Clearly $Q_i \geq 0$ by Cauchy-Schwarz. So we have $\sqrt{M} - M\gamma \geq 0$.
 
 \rule{0.3\linewidth}{0.25pt}
 \scriptsize
