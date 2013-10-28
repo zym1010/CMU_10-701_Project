@@ -197,29 +197,29 @@ $$ \theta x_1 + (1 - \theta) x_2 \in C $$
 $$ f(\theta x + (1 - \theta) y) \leq \theta f(x) + (1 - \theta) f(y) $$
 
 \emph{First-order conditions:} Suppose $f$ is differentiable. Then $f$ is convex if and only if $\mathbf{dom} f$ is convex and
-$$ f(y) \geq f(x) + \bigtriangledown f(x)^T (y-x) $$
+$$ f(y) \geq f(x) + \nabla f(x)^T (y-x) $$
 
 \emph{Second-order conditions:} Assume that $f$ is twice differentiable. Then $f$ is convex if and only if $\mathbf{dom} f$ is convex and its Hessian is positive semidefinite: for all $x \in \mathbf{dom} f$,
-$$ {\bigtriangledown}^2 f(x) \succeq 0 $$
+$$ {\nabla}^2 f(x) \succeq 0 $$
 
 \emph{Strict convexity:} Whenever $x \neq y$ and $0 < \theta < 1$, we have
 $$ f(\theta x + (1 - \theta) y) < \theta f(x) + (1 - \theta) f(y) $$
 Or
-$$ f(y) > f(x) + \bigtriangledown f(x)^T (y-x) $$
+$$ f(y) > f(x) + \nabla f(x)^T (y-x) $$
 Or \textbf{sufficient but not necessary condition:}
-$$ {\bigtriangledown}^2 f(x) \succ 0 $$
+$$ {\nabla}^2 f(x) \succ 0 $$
 
 \emph{Strong convexity:} There exists an $m > 0$ such that
-$$ f(y) \geq f(x) + \bigtriangledown f(x)^T (y-x) + \frac{m}{2} \| y-x \|_2^2 $$
+$$ f(y) \geq f(x) + \nabla f(x)^T (y-x) + \frac{m}{2} \| y-x \|_2^2 $$
 Or
-$$ \bigtriangledown^2 f(x) \succeq mI $$
+$$ \nabla^2 f(x) \succeq mI $$
 
 \emph{Convex function examples:}
 \begin{itemize}
 	\item Exponential. $e^{ax}$ is convex on $\mathbb{R}$, for any $a \in \mathbb{R}$
 	\item Powers. $x^a$ is convex on $\mathbb{R}_{++}$ when $a \geq 1$ or $a \leq 0$, and concave for $0 \leq a \leq 1$
 	\item Powers of absolute value. $|x|^p$ for $p \geq 1$ is convex on $\mathbb{R}$
-	\item Logatithm. $\log x$ is concave on $\mathbb{R}_++$
+	\item Logatithm. $\log x$ is concave on $\mathbb{R}_{++}$
 	\item Norms. Every norm on $\mathbb{R}^n$ is convex
 	\item $f(x) = \max{x_1, ... , x_n}$ is convex on $\mathbb{R}^n$
 	\item Log-sum-exp. $f(x) = \log(e^{x_1} + ... + e^{x_n})$ is convex on $\mathbb{R}^n$
@@ -234,6 +234,45 @@ Convex functions $f(x), g(x)$
 	\item Composition with nondecreasin convex function $g$: $g(f(x))$
 \end{itemize}
 
+\section{Gradient Descent}
+\textbf{Requrements:} Convex objective function $f$.
+\textbf{Convergence:} \emph{linear} \\
+\textbf{Algorithm} \emph{Gradient Descent Method} \\
+\textbf{given} a starting point $x \in \mathbf{dom} f$. \\
+\textbf{repeat}
+\begin{enumerate}
+    \item $\Delta x := - \nabla f(x)$.
+    \item \emph{Line search}. Choose step size t via exact or bactracking line search.
+    \item \emph{Update}. $x := x + t \nabla x$
+\end{enumerate}
+\textbf{until} stopping criterion is safisfied.
+
+\section{Newton's Method}
+\textbf{Requirements:} Convex objective function $f$, nonnegative second derivative $\partial_x^2 f(x) \succeq 0$.
+\textbf{Convergence:} \emph{Quadratic}
+\textbf{Taylor expansion}
+$$ f(x + \delta) = f(x) + \langle \delta, \partial_x f(x) \rangle + \frac{1}{2} \delta^T \partial_x^2 f(x) \delta + O(\delta^3) $$
+\textbf{Algorithm} \emph{Newton's method} \\
+\textbf{given} a starting point $x \in \mathbf{dom} f$, toleranece $\epsilon > 0$. \\
+\textbf{repeat}
+\begin{enumerate}
+    \item \emph{Compute the Newton step and decrement}. $\Delta x_{nt} := - \nabla^2 f(x)^{-1} \nabla f(x)$; $\lambda^2 := \nabla f(x)^T \nabla^2 f(x)^{-1} \nabla f(x)$.
+    \item \emph{Stopping criterion}. \textbf{quit} if $\lambda^2 / 2 \leq \epsilon$.
+    \item \emph{Line search}. Choose step size $t$ by bactracking line search.
+    \item \emph{Update}. $x := x + t \Delta x_{nt}$
+\end{enumerate}
+\textbf{Comparison of methods}
+\begin{tabular} {| c | c | c | c |}
+    \hline
+    & Newton & (sub)grad. & stoch. (sub)grad. \\
+    \hline
+    convergence & ***** & * - *** & * \\
+    \hline
+    cost/iter. & \$ \$ \$ \$ \$ & \$ \$ & \$ \\
+    \hline
+    assumptions & * & *** - ***** & ***** \\
+    \hline
+\end{tabular}
 
 
 
