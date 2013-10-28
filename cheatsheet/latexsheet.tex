@@ -285,7 +285,25 @@ $$ f(x + \delta) = f(x) + \langle \delta, \partial_x f(x) \rangle + \frac{1}{2} 
 
 \textbf{dual for LP} for standard LP $\min c^T x, \text{s.t.} Ax=b, x \succeq 0$, we have dual $\max -b^T \nu, \text{s.t.} A^T\nu - \lambda + c = 0, \lambda \succeq 0$. for inequality LP $\min c^T x, \text{s.t.} Ax\preceq b$, we have the dual problem $\max -b^T \lambda, \text{s.t.} A^T\lambda + c = 0, \lambda \succeq 0$.
 
+\section{SVM}
+\textbf{primal form (hard margin problem, $C$ is $+\infty$)} $\min_{w,b} 1/2 \|w\|^2, \text{s.t.} (w^T x_i + b)y_i \geq 1$.
+\textbf{Lagrangian} $L(w,b,\alpha) = 1/2 \|w\|^2 - \sum_i \alpha_i [(w^T x_i + b)y_i - 1]$. Minimize w.r.t. $w,b$, we have $\partial_w L(w,b,\alpha) = w-\sum_i \alpha_i y_i x_i = 0, \partial_b L(w,b,\alpha) =  \sum_i \alpha_i y_i = 0$.
+\textbf{dual form} Plugging back, we have $\max -1/2 \sum_{ij} \alpha_i \alpha_j y_i y_j \langle x_i, x_j \rangle + \sum_i \alpha_i$, with constraints $\sum_i \alpha_i y_i = 0$ and $\alpha_i \geq 0$. After solving this, we can preserve the input vectors that have associated $\alpha_i > 0$. These are support vectors. $b$ can be solved using support vectors, since they satisfy the inequality tightly. \textbf{why large margin} Maximum robustness relative to uncertainty; 
 
+\textbf{soft margin problem with slack variables} $\min_{w,b} 1/2 \|w\|^2 + C\sum_i \xi_i, \text{s.t.} (w^T x_i + b)y_i \geq 1 - \xi_i$ and $\xi_i \geq 0$. A trivial solution (upper bound is number of samples) is $w=0, b=0, \xi_i = 1$. 
+\textbf{Lagrangian} $L(w,b,\xi,\alpha,\eta) = 1/2 \|w\|^2 - \sum_i \alpha_i [(w^T x_i + b)y_i + \xi - 1] - \sum_i \eta_i \xi_i$. Minimize w.r.t. $w,b,\xi$, we have the third one $C-\alpha_i - \eta_i = 0$. 
+\textbf{dual form} Plugging back, we have the same objective, with additional box constraints on $a_i \in [0,C]$.
+By limiting $\alpha_i$, we set limit on each sample vector's impact on the decision boundary. Make the result more robust. When $C$ is small, more errors made; $C$ is large, converge to hard margin case. $C$ regulates the size of $\|w\|^2$.
+
+Basically, as $C$ increases, the margin becomes narrower.
+
+\textbf{kernel trick} by changing $\langle x_i, x_j \rangle$ by $k(x_i,x_j)$, we have kernelized nonlinear version. With increasing C, the boundaries becomes more and more wiggly. Increasing $C$ allows for more nonlinearities. Decreases number of errors
+
+\textbf{risk and loss} $C\sum_i \xi_i$ can be reformulated as $C\max[0,1 - y_i [\langle w,x_i \rangle + b]$, without constraint. $\max[0,1 - y_i [\langle w,x_i \rangle + b]$ is hinge loss function. Other choices are possible. 
+
+optimally, the loss function should be $1$ for $1 - y_i [\langle w,x_i \rangle + b \lq 0$, and $0$ otherwise. Hinge loss function is a convex approximation of it.
+
+logistic: $\log [1+e^{-f(x)}]$, Huberized loss: $0$ for $f(x) > 1$, $0.5(1-f(x))^2$ for $f(x) \in [0,1]$, and $0.5 - f(x)$ for $f(x)<0$. Choosing a quadratic penality when $\xi_i$ is small means we don't care small loss that much.
 
 \rule{0.3\linewidth}{0.25pt}
 \scriptsize
