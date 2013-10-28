@@ -246,6 +246,10 @@ Convex functions $f(x), g(x)$
 
 \textbf{dual for LP} for standard LP $\min c^T x, \text{s.t.} Ax=b, x \succeq 0$, we have dual $\max -b^T \nu, \text{s.t.} A^T\nu - \lambda + c = 0, \lambda \succeq 0$. for inequality LP $\min c^T x, \text{s.t.} Ax\preceq b$, we have the dual problem $\max -b^T \lambda, \text{s.t.} A^T\lambda + c = 0, \lambda \succeq 0$.
 
+\section{SVM}
+\textbf{primal form} $\min_{w,b} 1/2 \|w\|^2, \text{s.t.} (w^T x_i + b)y_i \geq 1$.
+\textbf{Lagrangian} $L(w,b,\alpha) = 1/2 \|w\|^2 - \sum_i \alpha_i [(w^T x_i + b)y_i - 1]$. Minimize w.r.t. $w,b$, we have $\partial_w L(w,b,\alpha) = w-\sum_i \alpha_i y_i x_i = 0, \partial_b L(w,b,\alpha) =  \sum_i \alpha_i y_i = 0$.
+\textbf{dual form} Plugging back, we have $\max -1/2 \sum_{ij} \alpha_i \alpha_j y_i y_j \langle x_i, x_j \rangle + \sum_i \alpha_i$, with constraints $\sum_i \alpha_i y_i = 0$ and $\alpha_i \geq 0$. After solving this, we can preserve the input vectors that have associated $\alpha_i > 0$. These are support vectors.
 
 
 \rule{0.3\linewidth}{0.25pt}
