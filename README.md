@@ -34,3 +34,8 @@ Feel free to get in touch with me about the project at any point if you want.
 
 
 
+## Problems in Preprocessing
+
+1. Timestamps are not uniform.
+2. Identify interesting parts.
+3. Feature mapping.
