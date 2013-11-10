@@ -64,6 +64,15 @@ while ~eof
 end
 
 
+i = i + 1;
+save([prefix int2str(i) '.mat'], 'recording', 'device_ID');
+if ~isKey(count_map,device_ID)
+    count_map(device_ID) = i;
+else
+    count_map(device_ID) = [count_map(device_ID), i];
+end
+
+
 fclose(fid);
 
 end

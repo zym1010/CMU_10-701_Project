@@ -39,3 +39,11 @@ Feel free to get in touch with me about the project at any point if you want.
 1. Timestamps are not uniform.
 2. Identify interesting parts.
 3. Feature mapping.
+
+
+minimum length for training: 3200ms.
+length for segmentation: 1000ms.
+resampling frequency: 200ms.
+number of FFT: 32. (6400ms)
+how to cope with sample longer than 128: 50% sliding windows of length 128.
+

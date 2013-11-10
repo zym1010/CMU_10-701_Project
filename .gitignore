@@ -73,3 +73,13 @@ Thumbs.db
 
 
 Data/
+test_data/
+test_split/
+test_split2/
+train_data/
+train_feature/
+train_feature_avg/
+train_resample/
+train_split/
+train_split2/
+
