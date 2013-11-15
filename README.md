@@ -52,3 +52,5 @@ how to cope with sample longer than 128: 50% sliding windows of length 128.
 
 * splitData.m: split data that are 10s+ apart.
 * splitData2.m: throw away segments that are too short.
+* resample.m: resample the segments, with 200ms sampling rate.
+* getFeature_train.m: get feature vectors.
