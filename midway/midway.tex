@@ -84,11 +84,13 @@ Kwapisz et al.\cite{Kwapisz:BTAS2009} collect some data and also perform identif
 In this section, we describe the methods we have used to pre-process the raw data and classify the refined data. This is not necessarily the final version of our approach. 
 
 \subsection{The raw data}
-The data set can be easily acquired from Kaggle which consists of 3 parts: a training dataset, a testing dataset and a question set. Each single sample in the training and testing dataset contains a time stamp in milliseconds, acceleration measurements in 3 dimensions, and an associated DeviceId.  There is an Android application published on Google Play for such data collecting purpose. This application runs in background while reporting accelerometer data and the corresponding device id to a central server. 
+The data set acquired from Kaggle consists of 3 parts: a training dataset, a testing dataset and a question set. Each single sample in the training and testing dataset contains a time stamp in milliseconds, acceleration measurements in 3 dimensions, and an associated DeviceId.  There is an Android application published on Google Play for such data collection. This application runs in background while reporting accelerometer data and the corresponding device id to a central server. 
 
-In the training dataset, there are 30 million samples, which are collected from 387 different devices as labelled. In the testing data set, there are also 30 million samples, but without DeviceId. These samples are demarcated into 90,000 sequences, each with a SequenceId. In the question set, for each SequenceId, there's a proposed DeviceId.
+In the training dataset, there are 30 million samples, which are collected from 387 different devices as labeled. In the testing data set, there are also 30 million samples, but without DeviceId. These samples are demarcated into 90,000 sequences, each with a SequenceId. In the question set, for each SequenceId, there's a proposed DeviceId.
 
-The challenge on Kaggle is to tell whether each of the SequenceId is mapped correctly to its DeviceId. For our study, we aim at a more general version of the problem of classification, which is telling the correct DeviceId for any given sequence of sample.
+The challenge on Kaggle is to tell whether each sequence's proposed DeviceId is the sequence's real DeviceId. For each sequence, we're required to give a belief, in real number, about the credibility of the proposed DeviceId. Therefore, 
+
+ \emph{For our study, we aim at a more general version of the problem of classification, which is telling the correct DeviceId for any given sequence of sample.}
 
 \subsection{Refinement}
 The raw dateset has already be prepared preliminarily by Kaggle. First, the devices with less than 6000 samples are removed ahead. Second, the sequences shorter than 10 seconds are eliminated as well. 
