@@ -93,7 +93,7 @@ The challenge on Kaggle is to tell whether each sequence's proposed DeviceId is 
  \emph{For our study, we aim at a more general version of the problem of classification, which is telling the correct DeviceId for any given sequence of sample.}
 
 \subsection{Refinement}
-The raw dateset has already be prepared preliminarily by Kaggle. First, the devices with less than 6000 samples are removed ahead. Second, the sequences shorter than 10 seconds are eliminated as well. 
+The raw dateset has already been prepared preliminarily by Kaggle. First, the devices with fewer than 6000 samples are removed ahead. Second, sequences of samples during periods of rest exceeding 10 seconds are eliminated as well. 
 
 \begin{figure}
     \hspace{-0.5cm}
@@ -102,7 +102,7 @@ The raw dateset has already be prepared preliminarily by Kaggle. First, the devi
     \begin{minipage}[t]{0.47\textwidth}
     \centering
     \includegraphics[height=40mm]{fig/good_raw.eps}
-    \caption{A piece of raw data from a good trace. Data is almost uniformly distributed along time. }
+    \caption{A good trace of raw data. Data is almost uniformly distributed along time. }
     \label{fig:good_raw}
     \end{minipage}
     \begin{minipage}[t]{0.02\textwidth}~
@@ -110,7 +110,7 @@ The raw dateset has already be prepared preliminarily by Kaggle. First, the devi
     \begin{minipage}[t]{0.47\textwidth}
     \centering
     \includegraphics[height=40mm]{fig/bad_raw.eps}\\
-    \caption{A piece of data from a bad trace. There is no useful data in most of the samples over time. }
+    \caption{A bad trace of raw data. This piece essentially contains information about 2 separate activities that are far apart in time.}
     \label{fig:bad_raw}
     \end{minipage}
     \begin{minipage}[t]{0.02\textwidth}~
@@ -120,21 +120,21 @@ The raw dateset has already be prepared preliminarily by Kaggle. First, the devi
 
 However, the dataset is still far from beautiful.
 
-First, the accelerometers have various sampling rate. A larger interval between two samples may leads to much information lost between the two sample point. Furthermore, the acceleration on each dimension changes rapidly in such low sample rate. A variance of sampling interval within one device's trace even makes it harder to retrieve features from the trace.
+First, accelerometers have various sampling rates. A large interval between two samples may lead to much information loss between the two sample points. Furthermore, the acceleration on each dimension changes rapidly in such low sample rate. The high variance of sampling interval within one device's trace even makes it harder to retrieve features.
 
-Second, according to the nature of Android system and the low privilege of an application, sometimes the app cannot access accelerometer, sometimes the app itself is swapped out or killed by the operating system. Thus, a great part of the sample data is not well distributed over time.
+Second, according to the nature of Android system and the low privilege of an application, sometimes the app cannot access the accelerometer, sometimes the app itself is swapped out or killed by the operating system. Thus, a great part of the sample data is not well distributed over time.
 
-Figures \ref{fig:good_raw} and \ref{fig:bad_raw} show the read untouched raw data from two outstanding device. 
+Figures \ref{fig:good_raw} and \ref{fig:bad_raw} show the two segments of untouched raw data. 
 
-To overcome the two challenge above. We propose our three phase refinement: splitting, smoothing and re-sampling.
+To overcome the two challenges above. We propose our three phase refinement: splitting, smoothing and re-sampling.
 
-The idea of split is very simple. For the first step of splitting, we scan a sequence of data from a identical device in chronological order. Once the interval between our current sample point and the previous one is greater than a threshold $T_{split}$, the samples scanned before are grouped into one sub-sequence. This process continues until all the data from each identical device is split well. Then we go to step two of splitting. In this step, if any of the sub-sequences is shorter than threshold $T_{short}$, we simply eliminate it as we believe a too short sequence brings more noise than useful information. If, unfortunately, all the data from a particular device is abandoned, it left us no choice but keeping the longest among the sub-sequences of it.
+The idea of splitting is very simple. For the first step of splitting, we scan a sequence of data from a identical device in chronological order. Once the interval between our current sample point and the previous one is greater than a threshold $T_\mathrm{split}$, the samples scanned before are grouped into one sub-sequence. This process continues until all the data from each identical device is split completely. Then we go to the step two of splitting. In this step, if any sub-sequence is shorter than a threshold $T_\mathrm{short}$, we simply eliminate it as we believe that a too short sequence brings more noise than useful information. If, unfortunately, all the data from a particular device is abandoned, it left us no choice but keeping the longest among its all sub-sequences.
 
-The next phase is to make the sequence smoother, which hopefully could reduce the level of noise. To this end, interpolation is the idea comes to us so far. We simply adopt cubic spline as our interpolating function. Thus, we transform a sequence of data into a continuous curve. Some missing pieces of data are "reproduced" in this way. This phase makes it easier for feature retrieval as we can get a sequence of data by any uniformed time interval. We should notice that noise is not necessarily reduced well in this manner. The curve we get contains almost the whole noise from the original data as it is with respect to every single data point from the raw data. We believe a better smoothing function will help while we are still looking for such one.
+The next phase is to make the sequence smoother, which hopefully could reduce the level of noise. To this end, interpolation is the idea that comes to us so far. We simply adopt cubic spline as our interpolating function. Thus, we transform a sequence of sample points into a continuous curve. Some missing pieces of data are ``reproduced'' in this way. This phase makes it easier for feature retrieval as we can now get the data at any time point. We should notice that noise is not necessarily reduced well in this manner. The curve we get contains almost the whole noise from the original data as it is with respect to every single data point from the raw data. We believe a better smoothing function will help while we are still looking for such one.
 
-The third phase benefits from the smoothing phase as it is quite easy to re-sample data point from a smooth curve. We set a parameter, $\tau_{resample}$, to be the re-sampling interval. With this interval, a new sequence of data is generated based on the original data trace.
+The third phase benefits from the smoothing phase as it is quite easy to re-sample data point from a smooth curve. We set a parameter, $\tau_\mathrm{resample}$, to be the re-sampling time interval. With this interval, a new sequence of data is generated from on the (interpolated) original data trace.
 
-After the three phases we introduced above, the refined data trace is produced from the raw data. Next, we will propose the way we select features from such refined trace.
+After the three phases, the refined data trace is produced from the raw data. Next, we will propose the way we select features from such refined trace.
 
 \subsection{Feature extraction}
 Feature selection as well as extraction is the most important part of the entire classification method. A great feature should be pinpoint to reveal the underlying differences between the users (also known as DeviceId in this project). In this section, we describe how we extract features from the preprocessed data.
