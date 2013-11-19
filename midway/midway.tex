@@ -120,9 +120,9 @@ There were two problems with the raw dataset for further processing: 1) accelero
 \subsubsection{Segmentation} % (fold)
 First, the raw data was not properly segmented. For each sequence, the time intervals between two adjacent sample points were less than 500 ms most of the time. However, some intervals could be as huge as 100,000 ms. This problem was illustrated in Figures \ref{fig:good_raw} and \ref{fig:bad_raw}. They contain two test sequences of 300 points. In the first sequence (Figure~\ref{fig:good_raw}), all the points were close in time, and we could regard these points as representing a single activity. In the second sequence (Figure~\ref{fig:bad_raw}), there were two points that were far apart in time (so all the other points were pushed to two sides of the figure), and we can consider this sequence containing information about two separate activities. 
 
-Clearly, we couldn't consider the second sequence as representing information for a single activities, since so much information was unknown between the two far apart sample points. Such huge time interval was not uncommon in the dataset. This could be attributed to two reasons: 1) in preparing this dataset, sequences of samples during periods of rest exceeding 10 seconds were removed by Kaggle; 2) the device could be off or the app could be closed during the whole data collection process. 
+Clearly, we couldn't consider the second sequence as representing information for a single activities, since so much information was unknown between the two far apart sample points. Such huge time interval was not uncommon in the dataset. %This could be attributed to two reasons: 1) in preparing this dataset, sequences of samples during periods of rest exceeding 10 seconds were removed by Kaggle; 2) the device could be off or the app could be closed during the whole data collection process. 
 
-To overcome this problem, we performed segmentation on the raw data to split each sequence into subsequences. Our segmentation had two phases. In the first phase, we split the sequence at points where the time interval was larger than $T_\mathrm{split}$. After this, for each original sequence, we got several shorter sequences that had sample points close in time. In the second phase, we continually split the longest subsequence among all the subsequences until 1) we got $k_\mathrm{\#seq}$ subsequences from the original sequence, or 2) the longest subsequence was shorter than $2\times l_\mathrm{maxL}$. Also, sequences shorter than $T_\mathrm{short}$ were thrown.
+To overcome this problem, we performed segmentation on the raw data to split each sequence into subsequences. Our segmentation had two phases. In the first phase, we split the sequence at points where the time interval was larger than $T_\mathrm{split}$. After this, for each original sequence, we got several shorter sequences that had sample points close in time. In the second phase, we continually split the longest subsequence among all the subsequences until 1) we got $k_\mathrm{\#seq}$ subsequences, or 2) the longest subsequence was shorter than $2 l_\mathrm{maxL}$. Also, sequences shorter than $T_\mathrm{short}$ were thrown.
 
 We did the second-phase segmentation because after the first-phase segmentation, some resultant sequences were too short (less than 1000 ms) so that not much reliable features could be extracted, and some were too long (longer than 100 seconds) so that it might contain information about multiple activities of the user. 
 
@@ -144,7 +144,7 @@ Basically, we thought the patterns of the device might be better revealed in the
 \subsubsection{Time domain features}
 As the mobile devices people use are increasingly diverse, the characteristics of different devices offer us a set of very distinguishing features for recognizing users. One of these characteristics was the sampling intervals of the devices.
 
-As we observed from the raw data set, sampling intervals of devices has a range of approximately 5-250 ms, and for different devices, the distributions of the sampling intervals were quite different. Thus, for each subsequence, we used histogram (0-600 ms divided into bins of 20 ms, in total 30 values) of the sampling intervals of the original sequence it came from as the time domain features. 
+As we observed from the raw data set, sampling intervals of devices has a range of approximately 5-250 ms, and for different devices, the distributions of the sampling intervals were quite different. Thus, for each subsequence, we used the histogram (0-600 ms divided into bins of 20 ms, in total 30 values) of the sampling intervals of the original sequence it came from as the time domain features. 
 
 \subsubsection{Accelerometer reading features}
 Apart from the sampling intervals of devices, we found another set of features with potential ability of distinguishing devices, which was the accelerometer readings.
@@ -157,7 +157,7 @@ This is the ongoing part of our work. The basic idea is to leverage various kind
 
 After preprocessing and feature extraction, for each original sequence, we now had several feature vectors associated with it. These vectors were used for classification. For testing, the average of prediction results of all feature vectors associated with a test sequence was used for submission.
 
-We start from some naive classifiers. The performance of K-Nearest-Neighbor depends on the number of K and the definition of distance function. This classifier gave us a baseline result. Then we move on to popular classifiers such as support vector machines and logistic regression.
+We start from some naive classifiers. The performance of K-Nearest-Neighbor depends on the number of K and the definition of distance function. This classifier gave us a baseline result. Then we moved on to popular classifiers such as support vector machines and logistic regression.
 
 
 \section{Implementation and Evaluation}
