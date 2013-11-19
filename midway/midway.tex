@@ -62,6 +62,8 @@ In this project, we tried to explore a novel usage of the accelerometer: biometr
 
 
 
+
+
 \subsection{Related Work} \emph{haven't checked yet...}
 
 A human being’s walking gait can reflect the walker’s physical characteristics and psychological state, and therefore the features of gait can be employed for individual recognition. The use of accelerometer data for biometric identification is relatively new but has been increasingly explored in recent years. Existing methods for gait recognition have shown good performance.
@@ -75,16 +77,13 @@ Pan et al. \cite{Pan:EL2009} proposed algorithm based on signature points, inste
 Kwapisz et al.\cite{Kwapisz:BTAS2009} collect some data and also perform identification experiments . Based on the 600 raw accelerometer readings, they generated 43 features, which are variations of 6 basic features including average acceleration value, standard deviation, time between peaks and so on. They applied two classification techniques decision trees neural networks to classify and the identification performance turned out to be fairly good.
 
 
+\section{Information on the Kaggle competition}
+We got the dataset from the Kaggle competition (\href{http://www.kaggle.com/c/accelerometer-biometric-competition}{``Accelerometer Biometric Competition''}).
 
-\section{Methodology}
+\section{Methods}
 In this section, we describe the methods we have used for preprocessing, feature extraction, and classification. This is not necessarily the final version of our approach. 
 
-\subsection{The raw data}
-The data set acquired from Kaggle consists of 3 parts: a training dataset, a testing dataset and a question set. Each single sample in the training and testing dataset contains a time stamp in milliseconds, acceleration measurements in 3 dimensions, and an associated DeviceId.  There is an Android application published on Google Play for such data collection. This application runs in background while reporting accelerometer data and the corresponding device id to a central server. 
-
-In the training dataset, there are 30 million samples, which are collected from 387 different devices as labeled. In the testing data set, there are also 30 million samples, but without DeviceId. These samples are demarcated into 90,000 sequences, each with a SequenceId. In the question set, for each SequenceId, there's a proposed DeviceId.
-
-The challenge on Kaggle is to tell whether each sequence's proposed DeviceId is the sequence's real DeviceId. For each sequence, we're required to give a belief, in real number, about the credibility of the proposed DeviceId. Therefore, 
+Therefore, 
 
  \emph{For our study, we aim at a more general version of the problem of classification, which is telling the correct DeviceId for any given sequence of sample.}
 
