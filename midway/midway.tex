@@ -44,29 +44,25 @@ Yimeng Zhang \\
 \maketitle
 
 \begin{abstract}
-As cellphones and other smart devices are more closer to our daily life than ever, we are curious to know how the data gathered by sensors on the devices, especially identification via accelerometers, impacts our lives. In this project we try to answer this question with the tools machine learning provides. We will first study how to implement such biometric technique by retrieving useful identification information from raw accelerometer data. And then we will show how such technique impacts our lives.
+As cellphones and other smart devices are closer to our daily life than ever, we are curious to know how the data gathered by accelerometers on them impact our lives, particularly in terms of identifying users of devices via such data. In this project, we try to answer this question with machine learning techniques. We will first study how to implement such biometric techniques by retrieving useful identification information from raw accelerometer data and building classifiers. Then we will show how such techniques impact our lives.
 \end{abstract}
 
 \section{Introduction}
 
-
-
 \subsection{Motivation}
 
-Ubiquitous computing had never been so close to us as our phones become more powerful and smarter today. Sensors equipped in our cellphones like GPS, gyroscope, accelerometer and even barometer collect data from the surrounding environment and from ourselves. This information collected from our cellphones and other mobile devices can boost many more applications than just adjusting the brightness and rotating the screen. Google uses the GPS data from our phones to provide real-time traffic conditions. Apps can track how well you sleep by just putting your phone beside you on bed. Indoor localization takes advantage of wireless fingerprint, sound from microphone, footsteps from accelerometer and even colours from the camera to tell you where you are when GPS signal is weak inside buildings. More fancy applications far beyond the original purposes of these sensors are on the way. How to retrieve more information from the raw sensor data is one of the hot and promising topics today.
+\emph{Why is it important} Ubiquitous computing had never been so close to us as our phones become smarter and more powerful today. Sensors equipped in our cellphones like GPS, gyroscope, accelerometer and even barometer collect data from the surrounding environment and ourselves. This information collected from our cellphones and other mobile devices can boost many more applications than just adjusting the brightness of the screen and rotating it automatically. Google uses the GPS data from our phones to provide real-time traffic conditions. Apps can track how well you sleep by just putting your phone beside you on bed. Indoor localization takes advantage of wireless fingerprint, sound from microphone, footsteps from accelerometer and even colors from the camera to tell you where you are when GPS signal is weak inside buildings. Fancier applications far beyond the original purposes of these sensors are on the way. How to retrieve more information from the raw sensor data is one of the hottest and promising topics today.
 
-Accelerometer is one of the most interesting sensors in our cellphone which records the acceleration data in 3D. Posture of the phone, gestures and footsteps of the user, and even the user's sleeping condition can be measured by the accelerometer.
+\emph{What is the problem} Accelerometer is one of the most interesting sensors in our cellphone, which records the acceleration data in 3D. Posture of the phone, gestures and footsteps of the user, and even the user's sleeping condition can be measured by the accelerometer.
 
-In this project, we are trying to develop a novel usage of the accelerometer: biometric identification. In other words, can we identify the user by only looking into how he/she moves? We believe that everyone has his/her own unique pattern of movement. If this assumption is true, we can identify the person when we match the current data from the accelerometer to the historical data we have learned.
+In this project, we tried to explore a novel usage of the accelerometer: biometric identification. In other words, can we identify the user by only looking into how he (she) moves? We believe that everyone has his (her) own unique pattern of movement. If this assumption is true, we can identify the person when we match the current data from the accelerometer with the historical data we have learned.
 
-To achieve this, we adopt the already available accelerometer dataset gathered by Kaggle. By simply looking into the raw dataset, we can tell not only noise stands between us and our goal, quantity and quality of the raw data also make it harder and more necessary to refine the data before we apply any powerful classifier on it. Our first effect will be on preprocessing data. Then we will adopt several useful technique learned from machine learning to build a classifier for identification. With this preliminary approach, we will further revise and refine both the preprocessor and classifier. Hopefully we will finally achieve a pretty well identification technique in this iterative way. 
-
-If possible, we will evaluate our technique not by testing it on the Kaggle dataset, we will also develop apps for our smart phones to collect real time data for learning and evaluation. We hope this approach will give us the clue of how to protect our id privacy.
-
-We will learn a few things from this project besides a better understanding of machine learning itself if our machine learning algorithms finally identify users. First, the assumption about pattern of movement could be true. Second, applications such as anti-theft, health monitoring and emergency detection that adopt this novel identification technique will be available in the near future. Third, we will be able to know how much data from the accelerometer is sufficient to cause the leak of one's identity, which can trigger a serious privacy issue.
+\emph{Brief outline of solution} In this project, we chose the already available accelerometer dataset gathered by Kaggle. Due to the poor structure of the raw data set, we first did some preprocessing, mainly splitting and re-sampling. Then we extracted discriminative features from preprocessed dataset. The features we used included FFT coefficients, the distribution of timestamp intervals, and the set of possible acceleration readings. Finally, we applied several  classifiers to the feature vectors. Now we have got a score of almost 0.90 in terms of area under the ROC curve, which is satisfactory, although further improvement is still needed.
 
 
-\subsection{Related Work}
+
+
+\subsection{Related Work} \emph{haven't checked yet...}
 
 A human being’s walking gait can reflect the walker’s physical characteristics and psychological state, and therefore the features of gait can be employed for individual recognition. The use of accelerometer data for biometric identification is relatively new but has been increasingly explored in recent years. Existing methods for gait recognition have shown good performance.
  
@@ -81,7 +77,7 @@ Kwapisz et al.\cite{Kwapisz:BTAS2009} collect some data and also perform identif
 
 
 \section{Methodology}
-In this section, we describe the methods we have used to pre-process the raw data and classify the refined data. This is not necessarily the final version of our approach. 
+In this section, we describe the methods we have used for preprocessing, feature extraction, and classification. This is not necessarily the final version of our approach. 
 
 \subsection{The raw data}
 The data set acquired from Kaggle consists of 3 parts: a training dataset, a testing dataset and a question set. Each single sample in the training and testing dataset contains a time stamp in milliseconds, acceleration measurements in 3 dimensions, and an associated DeviceId.  There is an Android application published on Google Play for such data collection. This application runs in background while reporting accelerometer data and the corresponding device id to a central server. 
@@ -180,6 +176,12 @@ Currently we are ranked at 250 out of 500 competitors on Kaggle.
 \section*{Appendix}
 
 Our plan for future goes here.
+
+If possible, we will evaluate our technique not by testing it on the Kaggle dataset, we will also develop apps for our smart phones to collect real time data for learning and evaluation. We hope this approach will give us the clue of how to protect our id privacy.
+
+We will learn a few things from this project besides a better understanding of machine learning itself if our machine learning algorithms finally identify users. First, the assumption about pattern of movement could be true. Second, applications such as anti-theft, health monitoring and emergency detection that adopt this novel identification technique will be available in the near future. Third, we will be able to know how much data from the accelerometer is sufficient to cause the leak of one's identity, which can trigger a serious privacy issue.
+
+
 
 
 \bibliographystyle{IEEEtranS}
