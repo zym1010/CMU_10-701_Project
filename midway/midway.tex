@@ -129,25 +129,14 @@ In this manner, on the one hand, we make more sequences from one device, hopeful
 \subsubsection{Re-sampling} 
 After segmentation, for each device, we got several subsequences. However, these sequences were not uniformly sampled, due to various reasons. To make feature extraction simpler, we interpolated each segment using cubic spline and uniformly re-sampled each sequence with  $\tau_\mathrm{resample}$ being the re-sampling time interval.
 
-\subsubsection{The result of preprocessing} 
-
-After segmentation and re-sampling, for each raw sequence (from training set or testing set), we got several shorter re-sampled subsequences. 
-
 \subsection{Feature extraction}
-Feature selection as well as extraction is the most important part of the entire classification process. A great feature should pinpoint reveal the underlying differences between the users (also known as DeviceId in this project). In this section, we describe how to extract features from the data.
+
+After preprocessing, for each raw sequence (from training set or testing set), we got several shorter re-sampled subsequences. In this section, we describe how to extract a feature vector from each subsequence.
 	
 \subsubsection{Frequency domain features}
-The only assumption we made so far in this research project is that a human being moves in his/her own characteristic pattern. This pattern could be a sequence of outstanding events, or it could be some repeated, characteristic events as well. Noticing that accelerometer records data with unpredictable length and quality, we cannot assume that the complete sequence of events could be well recorded. Thus, our hope rests on the latter one. 
 
-It is customary to use frequency analysis for repeated events. In our approach so far, simple Fast Fourier Transformation is adopted. The basic idea is just making FFT on the refined data sequence we talked about in previous section.
 
-A better idea is to make windowed FFT on them. The reason is, as each of the sequence has different length, if we make full FFT on each sequence, the frequency components produced by FFT have different meanings on different lengths of FFT. For example, we make full FFT on two sequence with length 17 and 29 respectively, the resultant points are not matched in the frequency domain. The results will be hard to be interpreted and compared. To this end, we make the transformation in a given window size, $w_\mathrm{fft}$. Thus, multiple transformations are performed in a sliding window manner. We can average each corresponding points from different transformations, as they are matched in the frequency domain. 
-
-However, another concern arises. If we make one windowed FFT on a pretty long sequence, some information is erased by the sliding window averaging. This is true if we believe that a longer sequence could contain more information than a shorter one.
-
-To this end, we prefer to perform partitioning on long sequences before doing windowed FFT. There are two thresholds in the partitioning process. One is the lower bound of number of generated sub-sequences, $k_\mathrm{\#seq}$, the other is the upper bound of the maximum length among all the generated sub-sequences, $l_\mathrm{maxL}$. The procedure of partitioning goes as follows. The input sequence is halved into two sub-sequences until either of the following conditions satisfied: a) the number of sub-sequences is greater than $k_\mathrm{\#seq}$; b) all the sub-sequences are shorter than $l_\mathrm{maxL}$. In this manner, on the one hand, we make more sequences from one device, hopefully keeping more information about the device's diverse patterns. On the other hand, we use the second threshold to make the sequences not too short, so that they contain reliable information about patterns of the device.
-
-So far, the results of FFT is the extracted features as we shown above. As there are three dimensions, and the independent values of FFT with window size $w_{fft}$ is $1/2w_{fft}$, we build a feature space with $3/2w_{fft}$ dimensions.
+$w_\mathrm{fft}$
 
 \subsubsection{Time domain features}
 As the mobile devices people use are increasingly diverse, the characteristics of different devices offer us a set of very distinguishing features for recognizing users. One of these characteristics is the sampling frequencies of devices.
