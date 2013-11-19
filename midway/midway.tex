@@ -78,16 +78,18 @@ Kwapisz et al.\cite{Kwapisz:BTAS2009} collect some data and also perform identif
 
 
 \section{Information on the Kaggle competition}
-We got the dataset from the Kaggle competition (\href{http://www.kaggle.com/c/accelerometer-biometric-competition}{``Accelerometer Biometric Competition''}).
+We got the dataset from the Kaggle competition \href{http://www.kaggle.com/c/accelerometer-biometric-competition}{``Accelerometer Biometric Competition''}. The dataset consists of 3 parts: a training set, a testing set and a question set. Each single sample point in training and testing sets contains a time stamp in milliseconds, acceleration measurements in 3 dimensions, and an associated DeviceId (for the training set) or a SequenceId (for the testing set). 
+
+In the training set, there are 30 million samples, which are collected from 387 different devices as labeled. These samples are demarcated into 387 segments, each containing samples for a single device. In the testing data set, there are also 30 million samples without label. These samples are demarcated into 90,000 sequences, each with a SequenceId. In the question set, for each SequenceId, there's a proposed DeviceId.
+
+The challenge on Kaggle is to tell whether each sequence's proposed DeviceId is the sequence's real DeviceId. For each sequence, we're required to give a belief, in real number, about the credibility of the proposed DeviceId. This competition is designed to investigate the feasibility of using accelerometer data as a biometric for identifying users of mobile devices. For more detail, please refer to the competition website as listed above.
+
 
 \section{Methods}
 In this section, we describe the methods we have used for preprocessing, feature extraction, and classification. This is not necessarily the final version of our approach. 
 
-Therefore, 
 
- \emph{For our study, we aim at a more general version of the problem of classification, which is telling the correct DeviceId for any given sequence of sample.}
-
-\subsection{Refinement}
+\subsection{Preprocessing}
 The raw dateset has already been prepared preliminarily by Kaggle. First, the devices with fewer than 6000 samples are removed ahead. Second, sequences of samples during periods of rest exceeding 10 seconds are eliminated as well. 
 
 \begin{figure}
@@ -181,16 +183,18 @@ This is the To Be Done part.
 
 \subsection{Results}
 
-According to the rules of this compitition, classification results are judged on area under the ROC curve. Three main kinds of classifiers we have used are k-nearest neighbors， SVM with Gaussian kernel and $L_2$-regularized logistic regression. The results comparing with the compitition baseline, using k-NN of the mean values of the values in 3 dimension, is shown in Table 1.
+According to the rules of this compitition, classification results were judged on area under the ROC curve. The three kinds of classifiers we used were k-nearest neighbors, SVM with Gaussian kernel (using LIBSVM) and $L_2$-regularized logistic regression (using LIBLINEAR). The results along with the compitition baseline provided by Kaggle (kNN, with the mean of all accelerometer readings as the feature vector for each device in the training set, and the the mean of all readings as the feature vector for each sequence in the testing test), is shown in Table~\ref{tbl:test_result}. For k-nearest neighbors (k-NN-FFT in the table), only the frequency domain features were used, with $k=$. For SVM with Gaussian kernel (SVM-RBF-FFT in the table), $C=5, \gamma=10$ was used in LIBSVM, and only the frequency domain features were used. For logistic regression (LR-3 in the table), $C=2$ was used in LIBLINEAR, and all three kinds of features were used.
+
 
 \begin{table}[!ht]
 \caption{Testing results of four methods}
+\label{tbl:test_result}
 	\begin{center}
 		\begin{tabular}{ c | c  c  c  c }
 			\hline
-			 Methods & k-NN Mean & k-NN FFT & SVM & Regression \\
+			 Methods & k-NN-Mean (baseline) & k-NN-FFT & SVM-RBF-FFT & LR-3 \\
 			 \hline
-			 AUC & 0.50277 & 0.58590 & 0.79801 & 0.89729 \\
+			 AUC & 0.50277 & 0.58590 & 0.80077 & \textbf{0.89729} \\
 			 \hline
 		\end{tabular}
 	\end{center}
