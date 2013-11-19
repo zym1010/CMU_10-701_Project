@@ -4,6 +4,8 @@
 \usepackage{url}
 \usepackage{graphicx} 
 \usepackage[caption=false,font=footnotesize]{subfig}
+\usepackage{amsmath}
+\usepackage{amssymb}
 \renewcommand{\figurename}{\bf Figure}
 %\documentstyle[nips13submit_09,times,art10]{article} % For LaTeX 2.09
 
@@ -133,25 +135,29 @@ After segmentation, for each device, we got several subsequences. However, these
 
 After preprocessing, for each raw sequence (from training set or testing set), we got several shorter re-sampled subsequences. In this section, we describe how to extract a feature vector from each subsequence.
 	
+In the end, for each subsequence, we got a feature vector in $\mathbb{R}^{1290}$. This vector can be decomposed into 3 parts: frequency domain features, time domain features, and accelerometer reading features.
+
 \subsubsection{Frequency domain features}
+Basically, we thought the patterns of the device might be better revealed in the frequency domain. To this end, for each subsequence, we first extracted sliding windows of size $w_\mathrm{fft}$ and 50\% overlap (determined empirically). Then we did FFT on all windows. Finally, we calculated the magnitude of all first $w_\mathrm{fft}/2 + 1$ coefficients and use the average values over all windows as the frequency domain features for the subsequence. Since there were readings from 3 directions, we have $(w_\mathrm{fft}/2 + 1)\times 3$ values for frequency domain features per subsequence.
 
-
-$w_\mathrm{fft}$
 
 \subsubsection{Time domain features}
-As the mobile devices people use are increasingly diverse, the characteristics of different devices offer us a set of very distinguishing features for recognizing users. One of these characteristics is the sampling frequencies of devices.
+As the mobile devices people use are increasingly diverse, the characteristics of different devices offer us a set of very distinguishing features for recognizing users. One of these characteristics was the sampling intervals of the devices.
 
-As we observed from the timestamps of training data of each device, the sampling frequencies of devices has a range of approximately 10-250ms. Thus, we used the histogram of differences of timestamps in each sample as the time domain features.
+As we observed from the raw data set, sampling intervals of devices has a range of approximately 5-250 ms, and for different devices, the distributions of the sampling intervals were quite different. Thus, for each subsequence, we used histogram (0-600 ms divided into bins of 20 ms, in total 30 values) of the sampling intervals of the original sequence it came from as the time domain features. 
 
 \subsubsection{Accelerometer reading features}
-Apart from the sampling times of devices, we found another set of features with potential ability of distinguishing devices, which is the accelerometer readings.
+Apart from the sampling intervals of devices, we found another set of features with potential ability of distinguishing devices, which was the accelerometer readings.
 
-During observation of data, we found that each kind of device can only provide certain discrete values, this may be due to the accuracy limitation of accelerometers. Thus, the set of accelerometer readings a device can provide is also treated as a set of features.
+By observing the data, we found that each kind of device could only provide certain discrete values of accelerometer readings, and this might be due to the limited precision of accelerometers. Thus, the set of accelerometer readings a device can provide is also treated as a set of features. For each subsequence, we used the overlap between the the set of readings from the original sequence it came from and the set of readings from the $i$th device, $i=1,\ldots,387$. Since we had reading from 3 directions, $3\times 387 = 1161$ values constituted the accelerometer reading features for each subsequence.
 
 \subsection{Classification}
-This is the ongoing part of out work. The basic idea is to leverage various kinds of classifiers and optimize their parameter for more accurate results.
 
-We start from some naive classifiers. The performance of K-Nearest-Neighbor depends on the number of K and the definition of distance function. This classifier leads us to a baseline result. Then we move on to popular classifier such as support vector machine. Optimizing SVM via kernel and parameter selection will be discussed in next section.
+
+This is the ongoing part of our work. The basic idea is to leverage various kinds of classifiers and optimize their parameter for more accurate results.
+
+We start from some naive classifiers. The performance of K-Nearest-Neighbor depends on the number of K and the definition of distance function. This classifier gave us a baseline result. Then we move on to popular classifiers such as support vector machines and logistic regression.
+
 
 \section{Implementation and Evaluation}
 In this section we show how our approach performs. We will also manipulate and justify the selection of parameters of both reprocessing and classifiers.
