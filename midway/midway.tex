@@ -176,7 +176,8 @@ This is the To Be Done part.
 
 \subsection{Results}
 
-According to the rules of this competition, classification results were judged on area under the ROC curve. The three kinds of classifiers we used were k-nearest neighbors, SVM with Gaussian kernel (using LIBSVM) and $L_2$-regularized logistic regression (using LIBLINEAR). The results along with the competition baseline provided by Kaggle (kNN, with the mean of all accelerometer readings as the feature vector for each device in the training set, and the the mean of all readings as the feature vector for each sequence in the testing test), is shown in Table~\ref{tbl:test_result}. For k-nearest neighbors (k-NN-FFT in the table), only the frequency domain features were used, with $k=$. For SVM with Gaussian kernel (SVM-RBF-FFT in the table), $C=5, \gamma=10$ was used in LIBSVM, and only the frequency domain features were used. For logistic regression (LR-3 in the table), $C=2$ was used in LIBLINEAR, and all three kinds of features were used.
+
+According to the rules of this competition, classification results were judged on area under the ROC curve. The three kinds of classifiers we used were k-nearest neighbors, SVM with Gaussian kernel (using LIBSVM) and $L_2$-regularized logistic regression (using LIBLINEAR). The results along with the competition baseline provided by Kaggle (kNN, with the mean of all accelerometer readings as the feature vector for each device in the training set, and the the mean of all readings as the feature vector for each sequence in the testing test), is shown in Table~\ref{tbl:test_result}. For k-nearest neighbors (k-NN-FFT in the table), only the frequency domain features were used, with $k=40$. For SVM with Gaussian kernel (SVM-RBF-FFT in the table), $C=5, \gamma=10$ was used in LIBSVM, and only the frequency domain features were used. For logistic regression (LR-3 in the table), $C=2$ was used in LIBLINEAR, and all three kinds of features were used.
 
 
 \begin{table}[!ht]
@@ -194,6 +195,22 @@ According to the rules of this competition, classification results were judged o
 \end{table}
 
 \section*{Appendix}
+
+Our updated timeline is shown in Table~\ref{tbl:timeline}.
+
+\begin{table}[!ht]
+\caption{Updated Timeline}
+\label{tbl:timeline}
+    \begin{center}
+        \begin{tabular}{ c | c  }
+            \hline
+             Time & Steps To Desired Goals \\
+             \hline
+             \date{Nov 18 - 22} & Make use of new set of features (e.g.\ , time of day in each sample)\\
+             \hline
+        \end{tabular}
+    \end{center}
+\end{table}
 
 Our plan for future goes here.
 
