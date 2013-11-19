@@ -57,16 +57,16 @@ As cellphones and other smart devices are closer to our daily life than ever, we
 
 In this project, we tried to explore a novel usage of the accelerometer: biometric identification. In other words, can we identify the user by only looking into how he (she) moves? We believe that everyone has his (her) own unique pattern of movement. If this assumption is true, we can identify the person when we match the current data from the accelerometer with the historical data we have learned.
 
-\emph{Brief outline of solution} In this project, we chose the already available accelerometer dataset gathered by Kaggle. Due to the poor structure of the raw data set, we first did some preprocessing, mainly splitting and re-sampling. Then we extracted discriminative features from preprocessed dataset. The features we used included FFT coefficients, the distribution of timestamp intervals, and the set of possible acceleration readings. Finally, we applied several  classifiers to the feature vectors. Now we have got a score of almost 0.90 in terms of area under the ROC curve, which is satisfactory, although further improvement is still needed.
+\emph{Brief outline of solution} In this project, we chose the already available accelerometer dataset gathered by Kaggle. Due to the poor structure of the raw data set, we first did some preprocessing, mainly splitting and re-sampling. Then we extracted discriminative features from preprocessed dataset. The features we used included FFT coefficients, the distribution of timestamp intervals, and the set of possible acceleration readings. Finally, we applied several classifiers to the feature vectors. Now we have got a score of almost 0.90 in terms of area under the ROC curve, which is satisfactory, although further improvement is still needed.
 
 
 
 
 
 
-\subsection{Related Work} \emph{haven't checked yet...}
+\subsection{Related Work} 
 
-A human being’s walking gait can reflect the walker’s physical characteristics and psychological state, and therefore the features of gait can be employed for individual recognition. The use of accelerometer data for biometric identification is relatively new but has been increasingly explored in recent years. Existing methods for gait recognition have shown good performance.
+A human being's walking gait can reflect the walker's physical characteristics and psychological state, and therefore the features of gait can be employed for individual recognition. The use of accelerometer data for biometric identification is relatively new but has been increasingly explored in recent years. Existing methods for gait recognition have shown good performance.
  
 Gafurov et al. \cite{Gafurov:AIAT2007} attach multiple sensors to a subject at different body parts. Xu et al. \cite{Xu:ICB2012} developed an Android App to collect gait acceleration data. With a reasonably sized dataset, by matching gait patterns across different paces, they show preliminary results indicating that not only can smart phones be used to identify a person based on their normal gait but also that there is potential to match gait patterns across different speeds.
 
@@ -78,11 +78,11 @@ Kwapisz et al.\cite{Kwapisz:BTAS2009} collect some data and also perform identif
 
 
 \section{Information on the Kaggle competition}
-We got the dataset from the Kaggle competition \href{http://www.kaggle.com/c/accelerometer-biometric-competition}{``Accelerometer Biometric Competition''}. The dataset consists of 3 parts: a training set, a testing set and a question set. Each single sample point in training and testing sets contains a time stamp in milliseconds, acceleration measurements in 3 dimensions, and an associated DeviceId (for the training set) or a SequenceId (for the testing set). 
+We got the dataset from the Kaggle competition \href{http://www.kaggle.com/c/accelerometer-biometric-competition}{``Accelerometer Biometric Competition''}. The dataset consisted of 3 parts: a training set, a testing set and a question set. Each single sample point in training and testing sets contained a time stamp in milliseconds, acceleration measurements in 3 dimensions, and an associated DeviceId (for the training set) or a SequenceId (for the testing set). 
 
-In the training set, there are 30 million samples, which are collected from 387 different devices as labeled. These samples are demarcated into 387 segments, each containing samples for a single device. In the testing data set, there are also 30 million samples without label. These samples are demarcated into 90,000 sequences, each with a SequenceId. In the question set, for each SequenceId, there's a proposed DeviceId.
+In the training set, there were 30 million samples, which were collected from 387 different devices as labeled. These samples were demarcated into 387 segments, each containing samples for a single device. In the testing data set, there were also about 30 million samples without label. These samples were demarcated into 90,024 sequences of 300 points, each with a SequenceId. In the question set, for each SequenceId, there was a proposed DeviceId.
 
-The challenge on Kaggle is to tell whether each sequence's proposed DeviceId is the sequence's real DeviceId. For each sequence, we're required to give a belief, in real number, about the credibility of the proposed DeviceId. This competition is designed to investigate the feasibility of using accelerometer data as a biometric for identifying users of mobile devices. For more detail, please refer to the competition website as listed above.
+The task on Kaggle was to tell whether each sequence's proposed DeviceId was the sequence's real DeviceId. For each sequence, we were required to give a belief, in real number, about the credibility of the proposed DeviceId. This competition was designed to investigate the feasibility of using accelerometer data as a biometric for identifying users of mobile devices. For more detail, please refer to the competition website as listed above.
 
 
 \section{Methods}
@@ -90,7 +90,7 @@ In this section, we describe the methods we have used for preprocessing, feature
 
 
 \subsection{Preprocessing}
-The raw dateset has already been prepared preliminarily by Kaggle. First, the devices with fewer than 6000 samples are removed ahead. Second, sequences of samples during periods of rest exceeding 10 seconds are eliminated as well. 
+There were two problems with the raw dataset for further processing: 1) accelerometer data for each device was not properly segmented; 2) accelerometer readings were not uniformly sampled. For the first problem, we performed segmentation on 387 training sequences and 90024 testing sequences. For the second problem, we performed re-sampling based on cubic spline interpolation.
 
 \begin{figure}
     \hspace{-0.5cm}
@@ -99,7 +99,7 @@ The raw dateset has already been prepared preliminarily by Kaggle. First, the de
     \begin{minipage}[t]{0.47\textwidth}
     \centering
     \includegraphics[height=40mm]{fig/good_raw.eps}
-    \caption{A good trace of raw data. Data is almost uniformly distributed along time. }
+    \caption{A good sequence from raw data. Samples points were close in time. We regarded these points as representing a single activity.}
     \label{fig:good_raw}
     \end{minipage}
     \begin{minipage}[t]{0.02\textwidth}~
@@ -107,7 +107,7 @@ The raw dateset has already been prepared preliminarily by Kaggle. First, the de
     \begin{minipage}[t]{0.47\textwidth}
     \centering
     \includegraphics[height=40mm]{fig/bad_raw.eps}\\
-    \caption{A bad trace of raw data. This piece essentially contains information about 2 separate activities that are far apart in time.}
+    \caption{A bad sequence from raw data. This piece essentially contains information about 2 separate activities that were far apart in time. The line segments in the middle of the figure was due to the large time intervals between adjacent sample points.}
     \label{fig:bad_raw}
     \end{minipage}
     \begin{minipage}[t]{0.02\textwidth}~
@@ -115,15 +115,16 @@ The raw dateset has already been prepared preliminarily by Kaggle. First, the de
  \end{figure}
 
 
-However, the dataset is still far from beautiful.
+\subsubsection{Segmentation} % (fold)
+First, the raw data was not properly segmented. For each sequence, the time intervals between two adjacent sample points were less than 500 ms most of the time. However, some intervals could be as huge as 100,000 ms. This problem was illustrated in Figures \ref{fig:good_raw} and \ref{fig:bad_raw}. They contain two test sequences of 300 points. In the first sequence (Figure~\ref{fig:good_raw}), all the points were close in time, and we could regard these points as representing a single activity. In the second sequence (Figure~\ref{fig:bad_raw}), there were two points that were far apart in time (so all the other points were pushed to two sides of the figure), and we can consider this sequence containing information about two separate activities. 
 
-First, accelerometers have various sampling rates. A large interval between two samples may lead to much information loss between the two sample points. Furthermore, the acceleration on each dimension changes rapidly in such low sample rate. The high variance of sampling interval within one device's trace even makes it harder to retrieve features.
+Clearly, we couldn't consider the second sequence as representing information for a single activities, since so much information was unknown between the two far apart sample points. Such huge time interval was not uncommon in the dataset. This could be attributed to two reasons: 1) in preparing this dataset, sequences of samples during periods of rest exceeding 10 seconds were removed by Kaggle; 2) the device could be off or the app could be closed during the whole data collection process. 
 
-Second, according to the nature of Android system and the low privilege of an application, sometimes the app cannot access the accelerometer, sometimes the app itself is swapped out or killed by the operating system. Thus, a great part of the sample data is not well distributed over time.
 
-Figures \ref{fig:good_raw} and \ref{fig:bad_raw} show the two segments of untouched raw data. 
 
-To overcome the two challenges above. We propose our three phase refinement: splitting, smoothing and re-sampling.
+
+
+
 
 The idea of splitting is very simple. For the first step of splitting, we scan a sequence of data from a identical device in chronological order. Once the interval between our current sample point and the previous one is greater than a threshold $T_\mathrm{split}$, the samples scanned before are grouped into one sub-sequence. This process continues until all the data from each identical device is split completely. Then we go to the step two of splitting. In this step, if any sub-sequence is shorter than a threshold $T_\mathrm{short}$, we simply eliminate it as we believe that a too short sequence brings more noise than useful information. If, unfortunately, all the data from a particular device is abandoned, it left us no choice but keeping the longest among its all sub-sequences.
 
@@ -132,6 +133,10 @@ The next phase is to make the sequence smoother, which hopefully could reduce th
 The third phase benefits from the smoothing phase as it is quite easy to re-sample data point from a smooth curve. We set a parameter, $\tau_\mathrm{resample}$, to be the re-sampling time interval. With this interval, a new sequence of data is generated from on the (interpolated) original data trace.
 
 After the three phases, the refined data trace is produced from the raw data. Next, we will propose the way we select features from such refined trace.
+
+
+
+Second, according to the nature of Android system and the low privilege of an application, sometimes the app cannot access the accelerometer, sometimes the app itself is swapped out or killed by the operating system. Thus, a great part of the sample data is not well distributed over time.
 
 \subsection{Feature extraction}
 Feature selection as well as extraction is the most important part of the entire classification process. A great feature should pinpoint reveal the underlying differences between the users (also known as DeviceId in this project). In this section, we describe how to extract features from the data.
