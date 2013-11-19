@@ -120,9 +120,9 @@ There were two problems with the raw dataset for further processing: 1) accelero
 \subsubsection{Segmentation} % (fold)
 First, the raw data was not properly segmented. For each sequence, the time intervals between two adjacent sample points were less than 500 ms most of the time. However, some intervals could be as huge as 100,000 ms. This problem was illustrated in Figures \ref{fig:good_raw} and \ref{fig:bad_raw}. They contain two test sequences of 300 points. In the first sequence (Figure~\ref{fig:good_raw}), all the points were close in time, and we could regard these points as representing a single activity. In the second sequence (Figure~\ref{fig:bad_raw}), there were two points that were far apart in time (so all the other points were pushed to two sides of the figure), and we can consider this sequence containing information about two separate activities. 
 
-Clearly, we couldn't consider the second sequence as representing information for a single activities, since so much information was unknown between the two far apart sample points. Such huge time interval was not uncommon in the dataset. This could be attributed to two reasons: 1) in preparing this dataset, sequences of samples during periods of rest exceeding 10 seconds were removed by Kaggle; 2) the device could be off or the app could be closed during the whole data collection process. 
+Clearly, we couldn't consider the second sequence as representing information for a single activities, since so much information was unknown between the two far apart sample points. Such huge time interval was not uncommon in the dataset. %This could be attributed to two reasons: 1) in preparing this dataset, sequences of samples during periods of rest exceeding 10 seconds were removed by Kaggle; 2) the device could be off or the app could be closed during the whole data collection process. 
 
-To overcome this problem, we performed segmentation on the raw data to split each sequence into subsequences. Our segmentation had two phases. In the first phase, we split the sequence at points where the time interval was larger than 10 seconds (this value was based on how Kaggle prepared the data set). After this, for each original sequence, we got several shorter sequences that had sample points close in time. In the second phase, we continually split the longest subsequence among all the subsequences until 1) we got $k_\mathrm{\#seq}$ subsequences from the original sequence, or 2) the longest subsequence was shorter than $l_\mathrm{maxL}$. Also, sequences shorter than $T_\mathrm{short}$ were thrown.
+To overcome this problem, we performed segmentation on the raw data to split each sequence into subsequences. Our segmentation had two phases. In the first phase, we split the sequence at points where the time interval was larger than $T_\mathrm{split}$. After this, for each original sequence, we got several shorter sequences that had sample points close in time. In the second phase, we continually split the longest subsequence among all the subsequences until 1) we got $k_\mathrm{\#seq}$ subsequences, or 2) the longest subsequence was shorter than $2 l_\mathrm{maxL}$. Also, sequences shorter than $T_\mathrm{short}$ were thrown.
 
 We did the second-phase segmentation because after the first-phase segmentation, some resultant sequences were too short (less than 1000 ms) so that not much reliable features could be extracted, and some were too long (longer than 100 seconds) so that it might contain information about multiple activities of the user. 
 
@@ -138,13 +138,13 @@ After preprocessing, for each raw sequence (from training set or testing set), w
 In the end, for each subsequence, we got a feature vector in $\mathbb{R}^{1290}$. This vector can be decomposed into 3 parts: frequency domain features, time domain features, and accelerometer reading features.
 
 \subsubsection{Frequency domain features}
-Basically, we thought the patterns of the device might be better revealed in the frequency domain. To this end, for each subsequence, we first extracted sliding windows of size $w_\mathrm{fft}$ and 50\% overlap (determined empirically). Then we did FFT on all windows. Finally, we calculated the magnitude of all first $w_\mathrm{fft}/2 + 1$ coefficients and use the average values over all windows as the frequency domain features for the subsequence. Since there were readings from 3 directions, we have $(w_\mathrm{fft}/2 + 1)\times 3$ values for frequency domain features per subsequence.
+Basically, we thought the patterns of the device might be better revealed in the frequency domain. To this end, for each subsequence, we first extracted sliding windows of size $w_\mathrm{fft}$ and 50\% overlap (determined empirically). Then we did FFT on all windows. Finally, we calculated the magnitude of all first $(w_\mathrm{fft}/2 + 1)$ coefficients and use the average values over all windows as the frequency domain features for the subsequence. Since there were readings from 3 directions, we have $(w_\mathrm{fft}/2 + 1)\times 3$ values for frequency domain features per subsequence.
 
 
 \subsubsection{Time domain features}
 As the mobile devices people use are increasingly diverse, the characteristics of different devices offer us a set of very distinguishing features for recognizing users. One of these characteristics was the sampling intervals of the devices.
 
-As we observed from the raw data set, sampling intervals of devices has a range of approximately 5-250 ms, and for different devices, the distributions of the sampling intervals were quite different. Thus, for each subsequence, we used histogram (0-600 ms divided into bins of 20 ms, in total 30 values) of the sampling intervals of the original sequence it came from as the time domain features. 
+As we observed from the raw data set, sampling intervals of devices has a range of approximately 5-250 ms, and for different devices, the distributions of the sampling intervals were quite different. Thus, for each subsequence, we used the histogram (0-600 ms divided into bins of 20 ms, in total 30 values) of the sampling intervals of the original sequence it came from as the time domain features. 
 
 \subsubsection{Accelerometer reading features}
 Apart from the sampling intervals of devices, we found another set of features with potential ability of distinguishing devices, which was the accelerometer readings.
@@ -153,32 +153,30 @@ By observing the data, we found that each kind of device could only provide cert
 
 \subsection{Classification}
 
-
 This is the ongoing part of our work. The basic idea is to leverage various kinds of classifiers and optimize their parameter for more accurate results.
 
-We start from some naive classifiers. The performance of K-Nearest-Neighbor depends on the number of K and the definition of distance function. This classifier gave us a baseline result. Then we move on to popular classifiers such as support vector machines and logistic regression.
+After preprocessing and feature extraction, for each original sequence, we now had several feature vectors associated with it. These vectors were used for classification. For testing, the average of prediction results of all feature vectors associated with a test sequence was used for submission.
+
+We start from some naive classifiers. The performance of K-Nearest-Neighbor depends on the number of K and the definition of distance function. This classifier gave us a baseline result. Then we moved on to popular classifiers such as support vector machines and logistic regression.
 
 
 \section{Implementation and Evaluation}
-In this section we show how our approach performs. We will also manipulate and justify the selection of parameters of both reprocessing and classifiers.
+In this section we show how our approach performed. We will also try to justify the selection of parameters for preprocessing.
 
 \subsection{Parameter selection}
 In this subsection we discuss how to determine the parameters and thresholds we defined in the previous sections.
 
-$T_{splite}$ is set to be 10 second in consistent with the preprocessing setting done by Kaggle. It is pointless to set the threshold above 10 seconds as those sequence shorter than 10 seconds have already been eliminated. We keep this threshold as large as possible to generate longer continues sequences. $T_{short}$ is set as 4.8 seconds for training set and 3.2 seconds for test set based on empirical study. 
+$T_\mathrm{split}$ was set to be 10 seconds to be consistent with the preprocessing setting done by Kaggle.  $T_\mathrm{short}$ and $l_\mathrm{maxL}$ were both set to be 4.8 seconds for the training set and 3.2 seconds for the testing set empirically. $\tau_\mathrm{resample}$ was set to be 200 milliseconds based on statistics of the distribution of the time intervals of the raw data, but any value near 200 ms should be a reasonable choice. The window size of FFT, $w_\mathrm{fft}$, was 64, which meant a window of duration 12.8 seconds. For training, $k_\mathrm{\#seq}=50$; for testing, $k_\mathrm{\#seq}=5$.
 
-We let $\tau_{resample}$ be 200 millisecond. This value is chosen based our statistic result of the distribution of the original data. Any value near 200 ms is a reasonable choice because most of the intervals lie in this range. Choosing a value deviating from 200 ms could misinterpret the data. (put a figure here for CDF of interval?)
 
-The window size of FFT, $w_{fft}$, is 64 sample points, which means a window with length 12.8 seconds. We chose this value to balance the details of data and dimensions of feature space. 
-
-$k_{\#seq}$ and  $l_{maxL}$ are more flexible as the result is less sensitive on these values.
 
 \subsection{Optimizing classifier}
 This is the To Be Done part.
 
 \subsection{Results}
 
-According to the rules of this compitition, classification results were judged on area under the ROC curve. The three kinds of classifiers we used were k-nearest neighbors, SVM with Gaussian kernel (using LIBSVM) and $L_2$-regularized logistic regression (using LIBLINEAR). The results along with the compitition baseline provided by Kaggle (kNN, with the mean of all accelerometer readings as the feature vector for each device in the training set, and the the mean of all readings as the feature vector for each sequence in the testing test), is shown in Table~\ref{tbl:test_result}. For k-nearest neighbors (k-NN-FFT in the table), only the frequency domain features were used, with $k=40$. For SVM with Gaussian kernel (SVM-RBF-FFT in the table), $C=5, \gamma=10$ was used in LIBSVM, and only the frequency domain features were used. For logistic regression (LR-3 in the table), $C=2$ was used in LIBLINEAR, and all three kinds of features were used.
+
+According to the rules of this competition, classification results were judged on area under the ROC curve. The three kinds of classifiers we used were k-nearest neighbors, SVM with Gaussian kernel (using LIBSVM) and $L_2$-regularized logistic regression (using LIBLINEAR). The results along with the competition baseline provided by Kaggle (kNN, with the mean of all accelerometer readings as the feature vector for each device in the training set, and the the mean of all readings as the feature vector for each sequence in the testing test), is shown in Table~\ref{tbl:test_result}. For k-nearest neighbors (k-NN-FFT in the table), only the frequency domain features were used, with $k=40$. For SVM with Gaussian kernel (SVM-RBF-FFT in the table), $C=5, \gamma=10$ was used in LIBSVM, and only the frequency domain features were used. For logistic regression (LR-3 in the table), $C=2$ was used in LIBLINEAR, and all three kinds of features were used.
 
 
 \begin{table}[!ht]
