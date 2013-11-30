@@ -1,4 +1,4 @@
-function resample( )
+function resample_test( )
 %RESAMPLE Resamples the training and testing data with certain time
 %interval
 
@@ -6,15 +6,15 @@ global PROJECT_PARAMETER_STRUCT
 
 interval = PROJECT_PARAMETER_STRUCT.sampling_rate;
 
-trainDir = './train_resample/';
+trainDir = './test_resample_10s/';
 
 if ~exist(trainDir, 'dir')
     mkdir(trainDir);
 end
 
-for i = 1 : 387
+for i = 1 : 90024
     resampleRecord = {};
-    load(['train' int2str(i) 'ss.mat']);
+    load(['test' int2str(i) 'ss.mat']);
     parfor j = 1 : length(splitRecord2)
         splitRecord2{j}(:,1) = splitRecord2{j}(:,1) - splitRecord2{j}(1,1);
         pointNo = floor(splitRecord2{j}(end,1) / interval);
@@ -27,7 +27,7 @@ for i = 1 : 387
         resampleRecord{j}(:,4) = spline(splitRecord2{j}(ia,1), splitRecord2{j}(ia,4), resampleRecord{j}(:,1));
         
     end
-    fileName = [trainDir 'train' int2str(i) 'r.mat'];
+    fileName = [trainDir 'test' int2str(i) 'r.mat'];
     save(fileName, 'resampleRecord');
     disp(i);
 end

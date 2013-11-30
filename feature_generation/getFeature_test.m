@@ -1,4 +1,4 @@
-function [ ] = getFeature_train()
+function [ ] = getFeature_test()
 %GETFEATURE_TRAIN Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -6,7 +6,7 @@ global PROJECT_PARAMETER_STRUCT
 overlap = PROJECT_PARAMETER_STRUCT.sliding_window_overlap;
 window_length = PROJECT_PARAMETER_STRUCT.sliding_window_length;
 assert(floor(window_length*overlap) == window_length*overlap); % integer shift
-min_window_length = PROJECT_PARAMETER_STRUCT.min_sliding_window_length;
+%min_window_length = PROJECT_PARAMETER_STRUCT.min_sliding_window_length;
 %maybe useful for testing
 variance_threshold = PROJECT_PARAMETER_STRUCT.variance_threshold;
 
@@ -15,24 +15,25 @@ fft_length = PROJECT_PARAMETER_STRUCT.fft_length;
 
 window_shift = window_length*(1-overlap);
 
-minimum_sample_per_class = PROJECT_PARAMETER_STRUCT.minimum_sample_per_class;
-
+minimum_sample_per_class = PROJECT_PARAMETER_STRUCT.minimum_sample_per_class_test;
 
 average_over_window = PROJECT_PARAMETER_STRUCT.average_over_window;
 
-featureDir = './train_feature_avg/';
+featureDir = './test_feature_avg_10s/';
 
 if ~exist(featureDir, 'dir')
     mkdir(featureDir);
 end
 
-for i = 1:387
-    load(['train' int2str(i) 'r' '.mat']);
+for i = 1:90024
+    load(['test' int2str(i) 'r' '.mat']);
     
     variance_list = [];
     index_list = [];
     
-    
+    fprintf('record %d has %d segments\n',i,length(resampleRecord));
+    resampleRecord = getSplitResampleRecord(resampleRecord);
+    fprintf('record %d has %d segments\n',i,length(resampleRecord));
     
     for j = 1:length(resampleRecord)
         
@@ -75,7 +76,7 @@ for i = 1:387
         
         this_window = this_record(get_window_k(record_length,window_length,window_shift,this_index(2)),:);
         
-        assert(size(this_window,1) >= min_window_length);
+        %assert(size(this_window,1) >= min_window_length);
         
         Y = fft(this_window,fft_length);
         
@@ -113,14 +114,14 @@ for i = 1:387
         
         for mm = 1:length(included_segments)
             index_for_this_seg = (index_list(:,1)==included_segments(mm));
-            feature_vector_list_avg(:,mm) = sum(feature_vector_list(:,index_for_this_seg),2);
+            feature_vector_list_avg(:,mm) = mean(feature_vector_list(:,index_for_this_seg),2);
         end
         
         feature_vector_list = feature_vector_list_avg;
     end
         
     
-    save([ featureDir 'train_feature' int2str(i) '.mat'], 'feature_vector_list');
+    save([ featureDir 'test_feature' int2str(i) '.mat'], 'feature_vector_list');
     
     i
     
@@ -128,4 +129,38 @@ end % file loop
 
 
 end
+
+
+
+function oldRecord = getSplitResampleRecord(oldRecord)
+global PROJECT_PARAMETER_STRUCT
+    record_stat = getRecordStat(oldRecord);
+    
+    while any(record_stat >= (PROJECT_PARAMETER_STRUCT.segment_min_point_test)*2) && ...
+        (length(record_stat) < PROJECT_PARAMETER_STRUCT.min_segment_test)
+        [maxLength,idx] = max(record_stat);
+        
+        record_max = oldRecord{idx};
+        
+        record_first = record_max(1:floor(maxLength/2),:);
+        record_last = record_max(floor(maxLength/2)+1:end,:);
+        
+        oldRecord{idx} = record_first;
+        oldRecord{end+1} = record_last;
+        
+        record_stat = getRecordStat(oldRecord);
+        
+    end
+    
+end
+
+
+function stat = getRecordStat(record)
+    stat = zeros(length(record),1);
+    
+    for i = 1:length(stat)
+        stat(i) = size(record{i},1);
+    end
+end
+
 
