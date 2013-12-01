@@ -6,16 +6,22 @@ global PROJECT_PARAMETER_STRUCT
 
 interval = PROJECT_PARAMETER_STRUCT.sampling_rate;
 
-trainDir = './test_resample_10s/';
+trainDir = './test_resample_10s_par/';
 
 if ~exist(trainDir, 'dir')
     mkdir(trainDir);
 end
 
-for i = 1 : 90024
+load('split2_test_all.mat');
+
+resampleRecords = cell(90024,1);
+
+parfor i = 1 : 90024
     resampleRecord = {};
-    load(['test' int2str(i) 'ss.mat']);
-    parfor j = 1 : length(splitRecord2)
+    
+    splitRecord2 = splitRecords2{i};
+    
+    for j = 1 : length(splitRecord2)
         splitRecord2{j}(:,1) = splitRecord2{j}(:,1) - splitRecord2{j}(1,1);
         pointNo = floor(splitRecord2{j}(end,1) / interval);
         lastPoint = pointNo * interval;
@@ -27,9 +33,11 @@ for i = 1 : 90024
         resampleRecord{j}(:,4) = spline(splitRecord2{j}(ia,1), splitRecord2{j}(ia,4), resampleRecord{j}(:,1));
         
     end
-    fileName = [trainDir 'test' int2str(i) 'r.mat'];
-    save(fileName, 'resampleRecord');
+    resampleRecords{i} = resampleRecord;
     disp(i);
 end
+
+save([trainDir 'resample_test_all.mat'],'resampleRecords','PROJECT_PARAMETER_STRUCT')
+
 
 end

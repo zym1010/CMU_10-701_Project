@@ -2,15 +2,22 @@ function splitData_test()
 
 global PROJECT_PARAMETER_STRUCT
 
-splitDir = './test_split_10s/';
+splitDir = './test_split_10s_par/';
 
 if ~exist(splitDir, 'dir')
     mkdir(splitDir);
 end
 
-for j = 1 : 90024
+
+load('test_data_all.mat');
+
+splitRecords = cell(90024,1);
+
+parfor j = 1 : 90024
     splitRecord = {};
-    load(['test' int2str(j) '.mat']);
+    
+    recording = records{j}.recording;
+    
     timeDiff = diff(recording(:,1));
 
     index = [0; find(timeDiff>=PROJECT_PARAMETER_STRUCT.segmentation_length); size(recording,1)];
@@ -20,7 +27,11 @@ for j = 1 : 90024
         splitRecord{i-1} = recording(index(i-1)+1:index(i),:);
     end
 
-    fileName = [splitDir 'test' int2str(j) 's.mat'];
-    save(fileName, 'splitRecord');
+
+splitRecords{j} = splitRecord;
     disp(j);
+end
+
+save([splitDir 'split_test_all.mat'],'splitRecords','PROJECT_PARAMETER_STRUCT');
+
 end

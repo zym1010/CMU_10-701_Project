@@ -19,20 +19,28 @@ minimum_sample_per_class = PROJECT_PARAMETER_STRUCT.minimum_sample_per_class_tes
 
 average_over_window = PROJECT_PARAMETER_STRUCT.average_over_window;
 
-featureDir = './test_feature_avg_10s/';
+featureDir = './test_feature_avg_10s_par/';
 
 if ~exist(featureDir, 'dir')
     mkdir(featureDir);
 end
 
-for i = 1:90024
-    load(['test' int2str(i) 'r' '.mat']);
+load('resample_test_all.mat');
+feature_vector_lists = cell(90024,1);
+
+segment_min_point = PROJECT_PARAMETER_STRUCT.segment_min_point_test;
+min_segment = PROJECT_PARAMETER_STRUCT.min_segment_test;
+
+segment_min_point = 16; % hack;
+
+parfor i = 1:90024
+    resampleRecord = resampleRecords{i};
     
     variance_list = [];
     index_list = [];
     
     fprintf('record %d has %d segments\n',i,length(resampleRecord));
-    resampleRecord = getSplitResampleRecord(resampleRecord);
+    resampleRecord = getSplitResampleRecord(resampleRecord,segment_min_point,min_segment);
     fprintf('record %d has %d segments\n',i,length(resampleRecord));
     
     for j = 1:length(resampleRecord)
@@ -121,23 +129,26 @@ for i = 1:90024
     end
         
     
-    save([ featureDir 'test_feature' int2str(i) '.mat'], 'feature_vector_list');
+    feature_vector_lists{i} =  feature_vector_list;
     
-    i
+    disp(i)
     
 end % file loop
+
+
+save([ featureDir 'feature_main_test_all.mat'],'feature_vector_lists','PROJECT_PARAMETER_STRUCT');
 
 
 end
 
 
 
-function oldRecord = getSplitResampleRecord(oldRecord)
-global PROJECT_PARAMETER_STRUCT
+function oldRecord = getSplitResampleRecord(oldRecord,segment_min_point,min_segment)
+
     record_stat = getRecordStat(oldRecord);
     
-    while any(record_stat >= (PROJECT_PARAMETER_STRUCT.segment_min_point_test)*2) && ...
-        (length(record_stat) < PROJECT_PARAMETER_STRUCT.min_segment_test)
+    while any(record_stat >= (segment_min_point)*2) && ...
+        (length(record_stat) < min_segment)
         [maxLength,idx] = max(record_stat);
         
         record_max = oldRecord{idx};
@@ -153,7 +164,6 @@ global PROJECT_PARAMETER_STRUCT
     end
     
 end
-
 
 function stat = getRecordStat(record)
     stat = zeros(length(record),1);

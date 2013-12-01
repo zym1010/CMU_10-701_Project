@@ -5,7 +5,7 @@ PROJECT_PARAMETER_STRUCT.segmentation_length = 10000; % relatively stable.
 PROJECT_PARAMETER_STRUCT.segment_min_length = 4800; % rather arbitrary.
 
 
-PROJECT_PARAMETER_STRUCT.segment_min_length_test = 3200; % rather arbitrary.
+PROJECT_PARAMETER_STRUCT.segment_min_length_test = 2400; % rather arbitrary.
 
 PROJECT_PARAMETER_STRUCT.sampling_rate = 200; % very stable
 
