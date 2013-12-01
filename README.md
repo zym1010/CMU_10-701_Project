@@ -48,3 +48,10 @@ Feel free to get in touch with me about the project at any point if you want.
 * splitData2.m: throw away segments that are too short.
 * resample.m: resample the segments, with 200ms sampling rate.
 * getFeature_train.m: get feature vectors.
+
+
+## Features to be add
+
+* Inspirations from PhoneFoG paper: variance, entropy, sum of power.
+
+and many others...
