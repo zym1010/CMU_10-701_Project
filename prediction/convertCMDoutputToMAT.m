@@ -21,7 +21,7 @@ for i = 1:426625
     assert(abs(sum(numline(2:388))-1)<(10e-5));
     prob_estimates_all(i,:) = numline(2:388);
     
-    i
+    disp(i);
 end
 
 assert(feof(fid)==1);

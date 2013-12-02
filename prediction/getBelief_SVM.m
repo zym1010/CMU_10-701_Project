@@ -1,10 +1,11 @@
+function getBelief_SVM(test_score, suffix)
+
 load('alleged_device_ID_list.mat');
 load('id_list_train.mat');
-load('test_score_SVM_unique.mat');
 
 belief = zeros(90024,1);
 
-fid = fopen('submission_smooth_unique.csv', 'w');
+fid = fopen(['submission_smooth_' suffix '.csv'], 'w');
 fprintf(fid,'QuestionID,IsTrue\n');
 
 for i = 1 : 90024
@@ -15,4 +16,4 @@ end
 
 fclose(fid);
 
-save('belief.mat', 'belief');
+end

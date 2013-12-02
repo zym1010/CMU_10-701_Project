@@ -28,7 +28,12 @@ end
 
 load('resample_train_all.mat');
 
+
 feature_vector_lists = cell(387,1);
+
+feature_vector_lists_add = cell(387,1);
+
+entropy_vector_lists = cell(387,1);
 
 segment_min_point = PROJECT_PARAMETER_STRUCT.segment_min_point;
 min_segment = PROJECT_PARAMETER_STRUCT.min_segment;
@@ -77,6 +82,8 @@ parfor i = 1:387
     
     feature_vector_list = zeros(3*(fft_length/2+1),size(index_list,1));
     
+    entropy_vector_list = zeros(3,size(index_list,1));
+    
     for m = 1:size(index_list,1)
         this_index = index_list(m,:);
         this_record = resampleRecord{this_index(1)}(:,2:4);
@@ -93,6 +100,9 @@ parfor i = 1:387
         
         this_feature_vector = this_feature_vector(1:(fft_length/2+1),:);
         
+        % here, we can some other features
+        
+        entropy_vector_list(:,m) = computePSDEntropy(this_feature_vector);
         
         
         %this_feature_vector = this_feature_vector ./ repmat( sum(this_feature_vector,1), (fft_length/2+1),1);
@@ -109,35 +119,53 @@ parfor i = 1:387
         assert(sum(this_feature_vector(:))-counter < 10e-6);
         
         feature_vector_list(:,m) = this_feature_vector(:);
+        
+        
+        
     end
     
     
+    included_segments = unique(index_list(:,1));
     
     if average_over_window % combine vectors % caution: there're at least two ways to do normalization...
         
         
-        included_segments = unique(index_list(:,1));
+%         included_segments = unique(index_list(:,1));
         
         feature_vector_list_avg = zeros(3*(fft_length/2+1),length(included_segments));
         
+        entropy_vector_list_avg = zeros(3,length(included_segments));
         
         for mm = 1:length(included_segments)
             index_for_this_seg = (index_list(:,1)==included_segments(mm));
             feature_vector_list_avg(:,mm) = mean(feature_vector_list(:,index_for_this_seg),2);
+            
+            entropy_vector_list_avg(:,mm) = mean(entropy_vector_list(:,index_for_this_seg),2);
+            
         end
         
         feature_vector_list = feature_vector_list_avg;
+        
+        entropy_vector_list = entropy_vector_list_avg;
+        
     end
         
     
-    feature_vector_lists{i} =  feature_vector_list;
+    % generate features other than fft
     
+    additional_main_feature = generate_additional_main_feature(resampleRecord(included_segments));
+    
+    
+    feature_vector_lists{i} =  feature_vector_list;
+    feature_vector_lists_add{i} = additional_main_feature;
+    entropy_vector_lists{i} = entropy_vector_list;
     disp(i)
     
 end % file loop
 
 
-save([ featureDir 'feature_main_train_all.mat'],'feature_vector_lists','PROJECT_PARAMETER_STRUCT');
+save([ featureDir 'feature_main_train_all.mat'],'feature_vector_lists',...
+    'feature_vector_lists_add','entropy_vector_lists','PROJECT_PARAMETER_STRUCT');
 
 end
 
