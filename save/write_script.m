@@ -4,6 +4,8 @@ function [  ] = write_script( suffixArray, scriptName )
 
 fid = fopen(scriptName,'w');
 
+fprintf(fid,'export OMP_NUM_THREADS=20\n');
+
 for i = 1:length(suffixArray)
     suffix = suffixArray{i};
     fprintf(fid, 'liblinear-1.94/train -s 0 -c 1 train_%s.data %s.model\n',suffix,suffix);
