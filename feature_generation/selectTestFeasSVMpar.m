@@ -3,8 +3,8 @@ test_feature_entropy = zeros(426625,3);
 test_feature_mean = zeros(426625,3);
 test_feature_var = zeros(426625,3);
 test_feature_std = zeros(426625,3);
-test_feature_diff = zeros(426625,3);
-test_feature_acc = zeros(426625,1);
+test_feature_diff = zeros(426625,90);
+test_feature_acc = zeros(426625,30);
 test_feature_valhist = zeros(426625,90);
 
 
@@ -39,6 +39,6 @@ end
 
 
 
-save('test_feature_main_entropy_6addon.mat', 'test_feature_main', 'test_feature_entropy',...
+save('test_feature_main_entropy_6addon_new.mat', 'test_feature_main', 'test_feature_entropy',...
     'test_feature_mean', 'test_feature_var','test_feature_std', 'test_feature_diff', ...
     'test_feature_acc', 'test_feature_valhist', 'test_label');
