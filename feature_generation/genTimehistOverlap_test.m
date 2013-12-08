@@ -1,4 +1,4 @@
-load('feature_time_test_smooth.mat');
+load('feature_time_test_raw_smooth.mat');
 load('overlap_strict_test.mat');
 load('test_numlist.mat');
 
@@ -25,4 +25,4 @@ test_feature_overlap = sparse(test_feature_overlap);
 
 test_feature_timehist = sparse(test_feature_timehist);
 
-save('test_feature_overlap_timehist_smooth.mat','test_feature_overlap','test_feature_timehist');
+save('test_feature_overlap_timehist_smooth_raw.mat','test_feature_overlap','test_feature_timehist');

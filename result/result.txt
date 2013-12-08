@@ -1,0 +1,12 @@
+6 features are used.
+
+1. FFT features (mentioned already in report)
+2. Reading overlap features (mentioned already in report)
+3. Sampling interval histogram features (mentioned already in report)
+
+4. Histogram of all resampled readings for each segment (per segment, not per device).
+5. Histogram of absolute difference between adjacent readings for each segment (per segment, not per device).
+6. Histogram of length of acceleration (\sqrt{x^2+y^2+z^2}) for each segment (per segment, not per device).
+
+The code for last three new features can be seen at /feature_generation/generate_additional_main_feature.m.
+

@@ -8,9 +8,9 @@ for i = 1:90024
     features_raw = features_raw(1:30);
     features_raw = features_raw./sum(features_raw);
     
-    features_raw(features_raw<(1/10)) = 0;
+    %features_raw(features_raw<(1/10)) = 0;
     
-    features_raw = features_raw./sum(features_raw);
+    %features_raw = features_raw./sum(features_raw);
     
     
     feature_time_test(i,:) = features_raw;
@@ -31,9 +31,9 @@ for i = 1:length(big_result)
     features_raw = features_raw(1:30);
     features_raw = features_raw./sum(features_raw);
     
-    features_raw(features_raw<(1/10)) = 0;
+    %features_raw(features_raw<(1/10)) = 0;
     
-    features_raw = features_raw./sum(features_raw);
+    %features_raw = features_raw./sum(features_raw);
     
     features_raw = features_raw';
     

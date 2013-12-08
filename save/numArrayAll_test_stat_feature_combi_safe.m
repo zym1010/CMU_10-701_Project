@@ -1,0 +1,9 @@
+numberArray = cell(8,1);
+numberArray{1} = [0 1 1 0 0 0 0 0 1 1];
+numberArray{2} = [0 1 1 0 0 0 0 1 1 0];
+numberArray{3} = [0 1 1 0 0 0 0 1 0 1];
+numberArray{4} = [0 1 1 0 0 0 0 1 1 1];
+numberArray{5} = [0 1 1 0 0 0 0 0 0 1];
+numberArray{6} = [0 1 1 0 0 0 0 0 1 0];
+numberArray{7} = [0 1 1 0 0 0 0 1 0 0];
+numberArray{8} = [0 1 1 0 0 0 0 0 0 0];

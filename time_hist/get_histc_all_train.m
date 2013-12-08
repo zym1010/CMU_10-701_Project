@@ -8,9 +8,9 @@ for i = 1:387
     features_raw = features_raw(1:30);
     features_raw = features_raw./sum(features_raw);
     
-    features_raw(features_raw<(1/15)) = 0;
+    %features_raw(features_raw<(1/15)) = 0;
     
-    features_raw = features_raw./sum(features_raw);
+    %features_raw = features_raw./sum(features_raw);
     
     
     feature_time_train(i,:) = features_raw;

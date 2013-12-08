@@ -7,9 +7,10 @@ test_score = zeros(90024,387);
 
 for i = 1 : 90024
     this_score = prob_estimates_all((feature_count+1):(feature_count+num_list(i)), :);
-    test_score(i,:) =  mean(this_score,1);
+    test_score(i,:) =  median(this_score,1);
+%     fprintf('median\n');
 
-    assert(abs(sum(test_score(i,:))-1)<10e-5); 
+    %assert(abs(sum(test_score(i,:))-1)<10e-5); 
 
     feature_count = feature_count + num_list(i);
     

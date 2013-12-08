@@ -1,4 +1,4 @@
-load('feature_time_train.mat');
+load('feature_time_train_raw.mat');
 load('overlap_strict_train.mat');
 load('train_numlist.mat');
 
@@ -31,4 +31,4 @@ train_feature_overlap = sparse(train_feature_overlap);
 
 train_feature_timehist = sparse(train_feature_timehist);
 
-save('train_feature_overlap_timehist.mat','train_feature_overlap','train_feature_timehist');
+save('train_feature_overlap_timehist_raw.mat','train_feature_overlap','train_feature_timehist');

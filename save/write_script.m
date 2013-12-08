@@ -8,8 +8,8 @@ fprintf(fid,'export OMP_NUM_THREADS=20\n');
 
 for i = 1:length(suffixArray)
     suffix = suffixArray{i};
-    fprintf(fid, 'liblinear-1.94/train -s 0 -c 1 train_%s.data %s.model\n',suffix,suffix);
-    fprintf(fid, 'liblinear-1.94/predict -b 1 test_%s.data %s.model %s.output\n',suffix,suffix,suffix);
+    fprintf(fid, '/Users/yimengzh/Documents/MATLAB/liblinear-1.94/train -s 0 -c 1 train_%s.data %s.model\n',suffix,suffix);
+    fprintf(fid, '/Users/yimengzh/Documents/MATLAB/liblinear-1.94/predict -b 1 test_%s.data %s.model %s.output\n',suffix,suffix,suffix);
     fprintf(fid,'\n');
 end
 
