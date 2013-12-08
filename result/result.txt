@@ -55,3 +55,13 @@ AUC: 0.84558, 0.85386, 0.85836, 0.86201, 0.86411, 0.86609, 0.86627, 0.86818, 0.8
 Note that this experiment was only done for one repetition.
 
 It seems that much training data are redundant or noisy.
+
+
+5. Performance on SVM
+
+Because in our case SVM is very time-consuming, we only tried 3 combinations of features.
+
+all 6 features, (FFT using x/2): 0.80701
+only FFT (x/2): 0.81406
+FFT + features 4+5+6 (10% training data): 0.85112
+
