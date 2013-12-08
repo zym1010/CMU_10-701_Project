@@ -25,6 +25,11 @@ x/48, x/32, x/24, x/16, x/12, x/8,
 x/6, x/4, x/3, x/2
 0.80865, 0.80962, 0.80832, 0.80904
 
+
+no prior version
+0.79189, 0.79706, 0.79550, 0.79894, 0.79600, 0.79682, 0.79410, 0.79532, 0.79167, 0.79227.
+
+
 In my opinion, two possible reasons: 1) finer granularity in frequency domain is not useful intrinsically; 2) the given data is noisy so such fine frequency features may become noise for classification, although they’re intrinsically useful, if we have less noisy data.
 
 2. Best overall result
