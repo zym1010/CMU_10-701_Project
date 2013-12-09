@@ -1,0 +1,69 @@
+6 features are used.
+
+1. FFT features (mentioned already in report)
+2,5. Reading overlap features (mentioned already in report) rename f5
+3,6. Sampling interval histogram features (mentioned already in report)  rename f6
+
+
+4,2. Histogram of absolute difference between adjacent readings for each segment (per segment, not per device).
+5,3. Histogram of length of acceleration (\sqrt{x^2+y^2+z^2}) for each segment (per segment, not per device).
+6,4. Histogram of all resampled readings for each segment (per segment, not per device).
+
+
+The code for last three new features can be seen at /feature_generation/generate_additional_main_feature.m.
+
+
+1. Results for different granularity in frequency domain for FFT features.
+
+The resampling was taken at 200ms. So, FFT features describes the data’s frequency components from 0Hz to 1/0.2/2 = 2.5Hz. With original 64 point FFT, the frequency components are spaced at 2.5/32 Hz. We wonder if smaller or large space will affect the performance. Here, only FFT features are used.
+
+(substitute x with 2.5Hz)
+
+x/48, x/32, x/24, x/16, x/12, x/8, 
+0.80727, 0.80870, 0.80839, 0.80977, 0.80925, 0.80947, 
+
+x/6, x/4, x/3, x/2
+0.80865, 0.80962, 0.80832, 0.80904
+
+In my opinion, two possible reasons: 1) finer granularity in frequency domain is not useful intrinsically; 2) the given data is noisy so such fine frequency features may become noise for classification, although they’re intrinsically useful, if we have less noisy data.
+
+Wu: the fact means fine-grained feature extraction cannot exploit more independent features then the coarse-grained ones. Reasons: 1.Patterns of human movement do not have strong regularity on the frequencies we invest aged. 2. Accelerometer is not sensitive enough to gather that many useful features 3.Noise is also strong in that frequency range. 4.Our preprocessing destroys these features 5.Our classifier is bad.
+
+2. Best overall result
+
+With all 6 features (FFT using x/2), we have AUC 0.90761.
+
+
+
+3. Performance of combinations of features
+
+Only FFT: already mentioned above.
+Only Reading overlap: not tested
+Only timeliest: not tested
+Only feature 6: 0.84136
+Only feature 4: 0.81348
+Only feature 5: 0.82646
+4+5: 0.83940
+4+6: 0.85215
+5+6: 0.85658
+4+5+6: 0.86695
+
+4. Performance for different sizes of training data
+In this experiment, only features 1, 4, 5, 6 are used, since 2, 3 are generated not in a segment-by-segment basis, containing results related to the whole sequence for the device. FFT using x/2.
+
+percent of training data used: 10, 20, 30, 40, 50, 60, 70, 80, 90, 100
+AUC: 0.84558, 0.85386, 0.85836, 0.86201, 0.86411, 0.86609, 0.86627, 0.86818, 0.86884, 0.86963
+
+Note that this experiment was only done for one repetition.
+
+It seems that much training data are redundant or noisy.
+
+
+5. Performance on SVM
+
+Because in our case SVM is very time-consuming, we only tried 3 combinations of features.
+
+all 6 features, (FFT using x/2): 0.80701
+only FFT (x/2): 0.81406
+FFT + features 4+5+6 (10% training data): 0.85112
+
