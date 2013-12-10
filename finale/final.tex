@@ -46,7 +46,8 @@ Yimeng Zhang \\
 \maketitle
 
 \begin{abstract}
-As cellphones and other smart devices are closer to our daily life than ever, we are curious to know how the data gathered by accelerometers on them impact our lives, particularly in terms of identifying users of devices via such data. In this project, we try to answer this question with machine learning techniques. We first studied how to implement such biometric techniques by retrieving useful identification information from raw accelerometer data. We then built classifiers with these information. At last we investigated in what way and how much of our privacy leaks through this technique via cellphones. We hope this work could show how such techniques impact our lives.
+The purpose of this project was to develop a method for classifying users of devices based on acceleration data and to discuss how to identify users without leaking their privacy. Raw acceleration data was segmented based on timestamp. Re-sampling was performed to unify the format of samples. After the preprocessing steps, six sets of features were extracted from raw and re-sampled data. For the classification task, three classifiers (k-NN, SVM and logistic regression) were applied. The best performing classifier got 0.907 area under the ROC (Receiver Operating Characteristic) curve. A quantitative analysis of user privacy issue was conducted based on types of features extracted and amount of data used.
+%As cellphones and other smart devices are closer to our daily life than ever, we are curious to know how the data gathered by accelerometers on them impact our lives, particularly in terms of identifying users of devices via such data. In this project, we try to answer this question with machine learning techniques. We first studied how to implement such biometric techniques by retrieving useful identification information from raw accelerometer data. We then built classifiers with these information. At last we investigated in what way and how much of our privacy leaks through this technique via cellphones. We hope this work could show how such techniques impact our lives.
 \end{abstract}
 
 \section{Introduction}
@@ -81,7 +82,7 @@ Pan et al. \cite{Pan:EL2009} proposed algorithm based on signature points, inste
 Kwapisz et al.\cite{Kwapisz:BTAS2009} collect some data and also perform identification experiments . Based on the 600 raw accelerometer readings, they generated 43 features, which are variations of 6 basic features including average acceleration value, standard deviation, time between peaks and so on. They applied two classification techniques decision trees neural networks to classify and the identification performance turned out to be fairly good.
 
 
-\section{Information on the Kaggle competition}
+\section{Information on the Kaggle Competition}
 \subsection{Raw data}
 The dataset provided by the Kaggle competition \href{http://www.kaggle.com/c/accelerometer-biometric-competition}{``Accelerometer Biometric Competition''}. The dataset consisted of 3 parts: a training set, a testing set and a question set. Each single sample point in training and testing sets contained a time stamp in milliseconds, acceleration measurements in 3 dimensions, and an associated DeviceId (for the training set) or a SequenceId (for the testing set). 
 
@@ -94,11 +95,11 @@ We should emphasize our goal of this project is not simply performing well in th
 
 
 \section{Methods}
-In this section, we describe the methods we have used for preprocessing, feature extraction, and classification. This is not necessarily the final version of our approach. 
+In this section, we describe the methods we used for preprocessing, feature extraction, and classification.
 
 
 \subsection{Preprocessing}
-There were two problems with the raw dataset for further processing: 1) accelerometer data for each device was not properly segmented; 2) accelerometer readings were not uniformly sampled. For the first problem, we performed segmentation on both training sequences and testing sequences. For the second problem, we performed re-sampling based on cubic spline interpolation.
+Two problems with the raw dataset need to be tackled before further processing: 1) the accelerometer data for each device was not properly segmented; 2) the accelerometer readings were not uniformly sampled according to the timestamp. Regarding these problems, segmentation and re-sampling were performed respectively.
 
 \begin{figure}
     \hspace{-0.5cm}
@@ -107,7 +108,7 @@ There were two problems with the raw dataset for further processing: 1) accelero
     \begin{minipage}[t]{0.47\textwidth}
     \centering
     \includegraphics[height=40mm]{fig/good_raw.eps}
-    \caption{A good sequence from raw data. Samples points were close in time. We regarded these points as representing a single activity.}
+    \caption{Example of a good sequence from raw data: samples points are close in time. These points are regarded as representing a single activity.}
     \label{fig:good_raw}
     \end{minipage}
     \begin{minipage}[t]{0.02\textwidth}~
@@ -115,7 +116,7 @@ There were two problems with the raw dataset for further processing: 1) accelero
     \begin{minipage}[t]{0.47\textwidth}
     \centering
     \includegraphics[height=40mm]{fig/bad_raw.eps}\\
-    \caption{A bad sequence from raw data. This piece essentially contains information about 2 separate activities that were far apart in time. The line segments in the middle of the figure was due to the large time intervals between adjacent sample points.}
+    \caption{Example of a bad sequence from raw data. This piece essentially contains information about two separate activities that are far apart in time. The line segments in the middle of the figure was due to the large time intervals between adjacent sample points.}
     \label{fig:bad_raw}
     \end{minipage}
     \begin{minipage}[t]{0.02\textwidth}~
@@ -124,11 +125,11 @@ There were two problems with the raw dataset for further processing: 1) accelero
 
 
 \subsubsection{Segmentation} % (fold)
-First, the raw data was not properly segmented. For each sequence, the time intervals between two adjacent sample points were less than 500 ms most of the time. However, some intervals could be as huge as 100,000 ms. This problem was illustrated in Figures \ref{fig:good_raw} and \ref{fig:bad_raw}. They contain two test sequences of 300 points. In the first sequence (Figure~\ref{fig:good_raw}), all the points were close in time, and we could regard these points as representing a single activity. In the second sequence (Figure~\ref{fig:bad_raw}), there were two points that were far apart in time (so all the other points were pushed to two sides of the figure), and we can consider this sequence containing information about two separate activities. 
+For each sequence of acceleration samples in the raw data, the time intervals between two adjacent sample points are less than 500ms for most of the time. However, some intervals can be as large as 100,000ms. This problem is illustrated in Figures \ref{fig:good_raw} and \ref{fig:bad_raw}. They both contain two test sequences of 300 points. In the first sequence (Figure~\ref{fig:good_raw}), all sample points are close in time, and we can treat these points as representing a single activity. In the second sequence (Figure~\ref{fig:bad_raw}), there are two points with a large time difference (so all the other points are pushed to two sides of the figure). Thus, we can consider this sequence containing information about two separate activities. 
 
-Clearly, we couldn't consider the second sequence as representing information for a single activities, since so much information was unknown between the two far apart sample points. Such huge time interval was not uncommon in the dataset. %This could be attributed to two reasons: 1) in preparing this dataset, sequences of samples during periods of rest exceeding 10 seconds were removed by Kaggle; 2) the device could be off or the app could be closed during the whole data collection process. 
+It shoule be clear that we cannot consider the second sequence as representing a single activity, since so much information is missing between the two far apart sample points. Such huge time interval is not uncommon in the dataset. %This could be attributed to two reasons: 1) in preparing this dataset, sequences of samples during periods of rest exceeding 10 seconds were removed by Kaggle; 2) the device could be off or the app could be closed during the whole data collection process. 
 
-To overcome this problem, we performed segmentation on the raw data to split each sequence into subsequences. Our segmentation had two phases. In the first phase, we split the sequence at points where the time interval was larger than $T_\mathrm{split}$. After this, for each original sequence, we got several shorter sequences that had sample points close in time. In the second phase, we continually split the longest subsequence among all the subsequences until 1) we got $k_\mathrm{\#seq}$ subsequences, or 2) the longest subsequence was shorter than $2 l_\mathrm{maxL}$. Also, sequences shorter than $T_\mathrm{short}$ were thrown.
+To tackle this problem, segmentation was performed on the raw data to split each sequence into subsequences. The segmentation has two phases. In the first phase, we split the sequences that have time intervals larger than $T_\mathrm{split}$. After that, shorter subsequences with sample points close in time. In the second phase, we continually split the longest subsequence among all the subsequences until 1) we got $k_\mathrm{\#seq}$ subsequences, or 2) the longest subsequence was shorter than $2 l_\mathrm{maxL}$. Also, sequences shorter than $T_\mathrm{short}$ were thrown.
 
 We did the second-phase segmentation because after the first-phase segmentation, some resultant sequences were too short (less than 1000 ms) so that not much reliable features could be extracted, and some were too long (longer than 100 seconds) so that it might contain information about multiple activities of the user. 
 
@@ -140,24 +141,24 @@ After segmentation, for each device, we got several subsequences. However, these
 \subsection{Feature extraction}
 \label{feautures}
 
-After preprocessing, for each raw sequence (from training set or testing set), we got several shorter re-sampled subsequences. In this section, we describe how to extract features sfrom each subsequence.
+After preprocessing, for each raw sequence (from training set or testing set), we got several shorter re-sampled subsequences. In this section, we describe how to extract features from each subsequence.
 	
 %In the end, for each subsequence, we got a feature vector in $\mathbb{R}^{1290}$. This vector can be decomposed into 3 parts: frequency domain features, time domain features, and accelerometer reading features.
-There are six categories of features we investigated. They represent different aspects of patterns from the data.
+Six categories of features were investigated. They represent different aspects of patterns from the data.
 
 \subsubsection{Frequency domain features}
-We believe the patterns of human mobility is easier to be exploited in frequency domain. To this end, for each subsequence, we first extracted sliding windows of size $w_\mathrm{fft}$ and 50\% overlap (determined empirically). Then we did FFT on all windows. Finally, we calculated the magnitude of all first $(w_\mathrm{fft}/2 + 1)$ coefficients and use the average values over all windows as the frequency domain features for the subsequence. Since there were readings from 3 directions, we have $(w_\mathrm{fft}/2 + 1)\times 3$ values for frequency domain features per subsequence.
+As different people has their own pace for actions, we believe the patterns of human mobility can be easily exploited in frequency domain. To this end, for each subsequence, we first extracted sliding windows of size $w_\mathrm{fft}$ and 50\% overlap (features extraction on windows with 50\% overlap has demonstrated success in previous work \cite{Bao:PC2004}). Then we did FFT on all windows. Finally, we calculated the magnitude of all first $(w_\mathrm{fft}/2 + 1)$ coefficients and used the average values over all windows as the frequency domain features for the subsequence. Because readings were from 3 directions, we have $(w_\mathrm{fft}/2 + 1)\times 3$ values for frequency domain features per subsequence.
 
 \subsubsection{Differences of acceleration}
-There could be more patterns and properties if we look beyond frequency domain. One obvious feature is the absolute difference between two adjacent readings of acceleration. This feature indicates how rapidly a person usually handles the phone or moves. It also indicates the environment this person lives. We use the distribution of such differences as the features in this category. Specifically, we compute the histogram of absolute differences between every two adjacent readings for each sequence as the features. 
+More patterns and properties were discovered when we look beyond frequency domain. One obvious feature is the absolute difference between two adjacent readings of acceleration. This feature measures how rapidly a person usually handles the phone or moves. It may also indicate the environment this person lives. The distribution of such differences was taken as the features in this category. Specifically, we computed the histogram of absolute differences between every adjacent pair of readings for each sequence as its features. 
 
 \subsubsection{Resultant acceleration}
-The value of each reading alone could also imply useful information. The resultant acceleration, which is defined as $\sqrt{x^2+y^2+z^2}$, directly evaluates the absolute value of the acceleration the phone suffers from. This value tells us how hard a person usually moves as the force is proportional to the acceleration it measures. The distribution of resultant acceleration is the third feature we used. Like we mentioned above, the histogram of this value is produced for each sequence as one category of its features.
+The value of each reading alone can also imply useful information. The resultant acceleration, which is defined as $\sqrt{x^2+y^2+z^2}$, directly evaluates the absolute value of the acceleration of the device. This value reveals how hard a person usually moves as the force is proportional to the acceleration it measures. The distribution of resultant acceleration is the third feature we used. Same as mentioned above, the histogram of this value is produced for each sequence as one category of its features.
 
 \subsubsection{Components of acceleration}
-Inspired by the feature above, separately extracting features among the three dimensions could generate more independent features. For example, a phone could usually lie on the desk which means x axis is more likely to be 10, when another phone's reading for y axis is larger when it is always kept in one's pocket. Three histograms are generated with this theory for every sequences.
+Inspired by the above feature, separately extracting features among the three dimensions could reveal more independent features. For example, a phone could usually lie on the desk which means x axis is more likely to be 10, when another phone's reading for y axis is larger when it is always kept in one's pocket. Three histograms are generated with this theory for every sequences.
 
-These four feature categories are what we mainly focus on. There are also many tricky features which could help us a lot to have a better score in the competition. However, these features could be useless in real world applications. 
+The above four sets of features are what we mainly focused on. There are also many tricky features which could help us a lot to have a better score in the competition. However, these features could be useless in real world applications. 
 
 \subsubsection{Raw sampling rate}
 As the mobile devices people use are increasingly diverse, the characteristics of different devices offer us a set of very distinguishing features for recognizing users. One of these characteristics was the sampling intervals of the devices.
@@ -169,7 +170,7 @@ Apart from the sampling intervals of devices, we found another set of features w
 
 By observing the data, we found that each kind of device could only provide certain discrete values of accelerometer readings, and this might be due to the limited precision of accelerometers. Thus, the set of accelerometer readings a device can provide is also treated as a set of features. For each subsequence, we used the overlap between the the set of readings from the original sequence it came from and the set of readings from the $i$th device, $i=1,\ldots,387$. Since we had reading from 3 directions, $3\times 387 = 1161$ values constituted the accelerometer reading features for each subsequence.
 
-The two tricky features introduced above help teams with satisfactory scores in the Kaggle competition. These features extract more features for phones (or the accelerometers on them) but not for persons. They could easily fail in real world when a lot portion of people use the same type of phone such as iphone. These feature also fails when a person use several mobile device or change the phone to a new type. 
+The two tricky features introduced above help teams to gain satisfactory scores in the Kaggle competition. However, they focus more on classifying devices rather than users. They could easily fail in real world when a large amount of people use the same type of devices such as iPhones. These feature may also fail when a person uses several devices at the same time or switches to a new device.
 
 \subsection{Classification}
 
@@ -256,7 +257,7 @@ According to the rules of this competition, classification results were judged o
 	\end{center}
 \end{table}
 
-The best results from our approach ranks top 8\% out of 634 teams on Kaggle. Although, the top teams reach over 0.99 of AUC for this competition, the tricky features mentioned in previous section boost the accuracy a lot. According to the online discussion, simply using tricky features to distinguish and identify sensors could achieve the idea results. Although the competition became a game of cheating as it suffers from  "leaks", as quoted from one of the best teams, we, who do not take effort to leverage leaks, show that the reasonable features, which are obtainable in real world, also leads to promising results.
+The best results from our approach ranks top 8\% out of 634 teams on Kaggle. Although, the top teams reach over 0.99 of AUC for this competition, the tricky features mentioned in previous section boost the accuracy a lot. According to the online discussion, simply using tricky features to distinguish and identify sensors could achieve the idea results. Although the competition became a game of cheating as it suffers from  ``leaks'', as quoted from one of the best teams, we, who do not take effort to leverage leaks, show that the reasonable features, which are obtainable in real world, also leads to promising results.
 
 \section{Privacy Control}
 In this section we look beyond the competition for a more meaningful and emergent topic, privacy. Results of our approach and others show that using acceleration information, the identity of a person could be easily leaked to others via the mobile devices surrounding us. Before anyone come up with evil ideas based on it, we are urgent to know how much data we can give out before our identities are compromised and in what form the data we provide is safer than other form.
