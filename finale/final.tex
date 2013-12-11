@@ -310,7 +310,11 @@ Although the competition became a game of cheating as it suffers from ``leaks'',
 
 
 \section{Privacy Control}
-In this section we look beyond the competition for a more meaningful and emergent topic, privacy. Results of our approach and others show that using acceleration information, the identity of a person could be easily leaked to others via the mobile devices surrounding us. Before anyone come up with evil ideas based on it, we are urgent to know how much data we can give out before our identities are compromised and in what form the data we provide is safer than other form.
+In this section we look beyond the competition for a more practical issue, privacy. By saying protecting user privacy, we mean that identifying users without revealing users' activity (e.g.\ what the user did at 6pm Dec. 10, 2013) and device type. The idea is similar to the fingerprint technology in the iPhones, where fingerprints are collected as an identification but not stored or revealed to others.
+
+To protect user privacy, features which may cause privacy leak were eliminated (including Feature \#1 which can be used to reconstruct the original acceleration data and Feature \#5 and \# 6 which may reveal device type). Classification performance was tested on using all features against using Features \#2 to \#4
+
+Results of our approach and others show that using acceleration information, the identity of a person could be easily leaked to others via the mobile devices surrounding us. Before anyone come up with evil ideas based on it, we are urgent to know how much data we can give out before our identities are compromised and in what form the data we provide is safer than other form.
 
 Besides identity, exploiting the raw traces of acceleration make a person even more vulnerable as it could be used for localization with our without the help of GPS. We first investigate how the features impact the accuracy of identification. We assume that distributions like histograms is safer than the frequency domain features. The reason is the data after FFT is still invertible while it is much harder to recovery the time domain trace from histograms. 
 
