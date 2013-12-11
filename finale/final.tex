@@ -46,7 +46,7 @@ Yimeng Zhang \\
 \maketitle
 
 \begin{abstract}
-The purpose of this project was to develop a method for classifying users of devices based on acceleration data and to discuss how to identify users without leaking their privacy. Raw acceleration data was segmented based on timestamp. Re-sampling was performed to unify the format of samples. After the preprocessing steps, six sets of features were extracted from raw and re-sampled data. For the classification task, three classifiers (k-NN, SVM and logistic regression) were applied. The best performing classifier got 0.907 area under the ROC (Receiver Operating Characteristic) curve. A quantitative analysis of user privacy issue was conducted based on types of features extracted and amount of data used.
+The purpose of this project was to develop a method for classifying cellphone users based on acceleration data and to discuss how to identify users without leaking their privacy. Raw acceleration data was segmented based on timestamp. Re-sampling was performed to unify the format of samples. After the preprocessing steps, six sets of features were extracted from raw and re-sampled data. For the classification task, three classifiers (k-NN, SVM and logistic regression) were applied. The best performing classifier got 0.907 using area under the ROC (Receiver Operating Characteristic) curve. A quantitative analysis of user privacy issue was conducted based on types of features extracted.
 %As cellphones and other smart devices are closer to our daily life than ever, we are curious to know how the data gathered by accelerometers on them impact our lives, particularly in terms of identifying users of devices via such data. In this project, we try to answer this question with machine learning techniques. We first studied how to implement such biometric techniques by retrieving useful identification information from raw accelerometer data. We then built classifiers with these information. At last we investigated in what way and how much of our privacy leaks through this technique via cellphones. We hope this work could show how such techniques impact our lives.
 \end{abstract}
 
@@ -54,20 +54,13 @@ The purpose of this project was to develop a method for classifying users of dev
 
 \subsection{Motivation}
 
-Ubiquitous computing had never been so close to us as our phones become smarter and more powerful today. Sensors equipped in our cellphones like GPS, gyroscope, accelerometer and even barometer collect data from the surrounding environment and ourselves. This information collected from our cellphones and other mobile devices can boost many more applications than just adjusting the brightness of the screen and rotating it automatically. Google uses the GPS data from our phones to provide real-time traffic conditions. Apps can track how well you sleep by just putting your phone beside you on bed. Indoor localization takes advantage of wireless fingerprint, sound from microphone, footsteps from accelerometer and even colors from the camera to tell you where you are when GPS signal is weak inside buildings. Fancier applications far beyond the original purposes of these sensors are on the way. How to retrieve more information from the raw sensor data is one of the hottest and promising topics today.
+Ubiquitous computing had never been so close to us as our phones become smarter and more powerful today. Sensors equipped in our cellphones like GPS, gyroscope, accelerometer can facilitate many useful applications. How to retrieve more information from the raw sensor data is one of the hottest and promising topics today.
 
-Accelerometer is one of the most interesting sensors in our cellphone, which records the acceleration data in 3D. Posture of the phone, gestures and footsteps of the user, and even the user's sleeping condition can be measured by the accelerometer.
+Accelerometer is one of the most interesting sensors in our cellphone, which records the acceleration data in 3D. In this project, we tried to explore a novel usage of the accelerometer: biometric identification. In other words, can we identify the user by only their movement? We believe that everyone has a unique pattern of movement. If this assumption is true, we can identify the person when we match the current accelerometer data with the historical data we have learned. 
 
-In this project, we tried to explore a novel usage of the accelerometer: biometric identification. In other words, can we identify the user by only looking into how he (she) moves? We believe that everyone has his (her) own unique pattern of movement. If this assumption is true, we can identify the person when we match the current data from the accelerometer with the historical data we have learned. 
+In this project, we chose the already available dataset gathered by Kaggle. Due to the poor quality of the raw data, we first performed preprocessing to normalize data for easier feature extraction. . By trying 3 different classifers on 6 kinds of features, we have got a score of over 0.90 in terms of area under the ROC curve, which is satisfactory, although further improvement is still needed.
 
-In this project, we chose the already available accelerometer dataset gathered by Kaggle. Due to the poor quality of the raw data set, we first performed preprocessing. The goal of preprocessing is to normalize data for easier feature extraction. Then we extracted discriminative features from the preprocessed dataset. The features we used included frequent domain patterns, relative and absolute time domain relations. We applied several classifiers to the feature vectors. So far, we have got a score of over 0.90 in terms of area under the ROC curve, which is satisfactory, although further improvement is still needed.
-
-Furthermore, we studied how the features we used impacts the accuracy of identification. We also showed the relation between quantity of training data and accuracy. These results help us understand what leaks our private information and how to stop it.
-
-
-
-
-
+Furthermore, we studied how the features we used impacted the accuracy of identification. These results help us understand what leaks our private information and how to stop it.
 
 \subsection{Related Work} 
 
@@ -86,20 +79,16 @@ Kwapisz et al.\cite{Kwapisz:BTAS2009} collect some data and also perform identif
 \subsection{Raw data}
 The dataset provided by the Kaggle competition \href{http://www.kaggle.com/c/accelerometer-biometric-competition}{``Accelerometer Biometric Competition''}. The dataset consisted of 3 parts: a training set, a testing set and a question set. Each single sample point in training and testing sets contained a time stamp in milliseconds, acceleration measurements in 3 dimensions, and an associated DeviceId (for the training set) or a SequenceId (for the testing set). 
 
-In the training set, there were 30 million samples, which were collected from 387 different devices as labeled. These samples were demarcated into 387 segments, each containing samples for a single device. In the testing data set, there were also about 30 million samples without label. These samples were demarcated into 90,024 sequences of 300 points, each with a SequenceId. In the question set, for each SequenceId, there was a proposed DeviceId.
+In the training set, there were 30 million labled samples from 387 devices. These samples were demarcated into 387 segments, each containing samples for a single device. In the testing data set, there were also about 30 million samples without label. These samples were demarcated into 90,024 sequences of 300 points, each with a SequenceId. In the question set, for each SequenceId, there was a proposed DeviceId.
 
 \subsection{Evaluation}
-The task on Kaggle was to tell whether each sequence's proposed DeviceId was the sequence's real DeviceId. For each sequence, we were required to give a belief, in real number, about the credibility of the proposed DeviceId. This competition was designed to investigate the feasibility of using accelerometer data as a biometric for identifying users of mobile devices. For more detail, please refer to the competition website as listed above.
-
-We should emphasize our goal of this project is not simply performing well in the Kaggle competition, but aims at how such technique impacts our daily life. However, for fairly evaluating our approach, we use the Kaggle online judging system along with hundreds of other teams. This system automatically outputs the area under the ROC curve as the score for a submitted answer generated by our classifiers. 
-
+The task on Kaggle was to tell whether each sequence's proposed DeviceId was the sequence's real DeviceId. For each sequence, we were required to give a belief about the credibility of the proposed DeviceId. For more detail, please refer to the competition website as listed above. We use the Kaggle online judging system, which output the area under the ROC curve as the score for a submission.
 
 \section{Methods}
 In this section, we describe the methods we used for preprocessing, feature extraction, and classification.
 
-
 \subsection{Preprocessing}
-Two problems with the raw dataset need to be tackled before further processing: 1) the accelerometer data for each device was not properly segmented; 2) the accelerometer readings were not uniformly sampled according to the timestamp. Regarding these problems, segmentation and re-sampling were performed respectively.
+Two problems with the raw dataset need to be tackled before further processing: 1) the accelerometer data was not properly segmented; 2) the accelerometer readings were not uniformly sampled. Regarding these problems, segmentation and re-sampling were performed respectively.
 
 \begin{figure}
     \hspace{-0.5cm}
@@ -125,15 +114,11 @@ Two problems with the raw dataset need to be tackled before further processing: 
 
 
 \subsubsection{Segmentation} % (fold)
-For each sequence of acceleration samples in the raw data, the time intervals between two adjacent sample points are less than 500ms for most of the time. However, some intervals can be as large as 100,000ms. This problem is illustrated in Figures \ref{fig:good_raw} and \ref{fig:bad_raw}. They both contain two test sequences of 300 points. In the first sequence (Figure~\ref{fig:good_raw}), all sample points are close in time, and we can treat these points as representing a single activity. In the second sequence (Figure~\ref{fig:bad_raw}), there are two points with a large time difference (so all the other points are pushed to two sides of the figure). Thus, we can consider this sequence containing information about two separate activities. 
+For each sequence of acceleration samples in the raw data, the time intervals between two adjacent sample points are less than 500ms for most of the time. However, some intervals can be as large as 100,000ms. This problem is illustrated in Figures \ref{fig:good_raw} and \ref{fig:bad_raw}. In the first sequence, all sample points are close in time, and they can be treated as representing a single activity. In the second, there are two points with a large time difference. Thus, we can consider this sequence containing information about two separate activities. It is clear that we cannot consider the second sequence as representing a single activity. %This could be attributed to two 
 
-It shoule be clear that we cannot consider the second sequence as representing a single activity, since so much information is missing between the two far apart sample points. Such huge time interval is not uncommon in the dataset. %This could be attributed to two reasons: 1) in preparing this dataset, sequences of samples during periods of rest exceeding 10 seconds were removed by Kaggle; 2) the device could be off or the app could be closed during the whole data collection process. 
+To tackle this, a two-phase segmentation was performed to split each sequence into subsequences. In the first phase, the sequences time intervals larger than $T_\mathrm{split}$ were split, resulting in several subsequences for each original sequence. In the second phase, we continually split the longest subsequence among all the subsequences until 1) we got $k_\mathrm{\#seq}$ subsequences, or 2) the longest subsequence was shorter than $2 l_\mathrm{maxL}$. Also, sequences shorter than $T_\mathrm{short}$ were thrown. We did the second-phase segmentation because after the first-phase, some resultant sequences were too short (less than 1000 ms) so that not much reliable features could be extracted, and some were too long (longer than 100 seconds) so that it might contain information about multiple activities of the user.
 
-To tackle this problem, segmentation was performed on the raw data to split each sequence into subsequences. The segmentation has two phases. In the first phase, we split the sequences that have time intervals larger than $T_\mathrm{split}$. After that, shorter subsequences with sample points close in time. In the second phase, we continually split the longest subsequence among all the subsequences until 1) we got $k_\mathrm{\#seq}$ subsequences, or 2) the longest subsequence was shorter than $2 l_\mathrm{maxL}$. Also, sequences shorter than $T_\mathrm{short}$ were thrown.
-
-We did the second-phase segmentation because after the first-phase segmentation, some resultant sequences were too short (less than 1000 ms) so that not much reliable features could be extracted, and some were too long (longer than 100 seconds) so that it might contain information about multiple activities of the user. 
-
-In this manner, on the one hand, we make more sequences from one device, hopefully keeping more information about the device's diverse patterns. On the other hand, we keep the sequences long enough, so that they contain reliable information about patterns of the device.
+In this manner, on the one hand, we make more sequences from one device, hopefully keeping more information about the device's diverse patterns. On the other hand, we keep the sequences long enough, so that they contain reliable information about patterns of the user.
 
 \subsubsection{Re-sampling} 
 After segmentation, for each device, we got several subsequences. However, these sequences were not uniformly sampled, due to various reasons. To make feature extraction simpler, we interpolated each segment using cubic spline and uniformly re-sampled each sequence with  $\tau_\mathrm{resample}$ being the re-sampling time interval.
@@ -141,10 +126,7 @@ After segmentation, for each device, we got several subsequences. However, these
 \subsection{Feature extraction}
 \label{feautures}
 
-After preprocessing, for each raw sequence (from training set or testing set), we got several shorter re-sampled subsequences. In this section, we describe how to extract features from each subsequence.
-	
-%In the end, for each subsequence, we got a feature vector in $\mathbb{R}^{1290}$. This vector can be decomposed into 3 parts: frequency domain features, time domain features, and accelerometer reading features.
-Six categories of features were investigated. They represent different aspects of patterns from the data.
+After preprocessing, for each raw sequence (from training set or testing set), we got several shorter re-sampled subsequences. In this section, we describe how to extract features from each subsequence. Six categories of features were investigated. They represent different aspects of patterns from the data.
 
 \subsubsection{Frequency domain features}
 As different people has their own pace for actions, we believe the patterns of human mobility can be easily exploited in frequency domain. To this end, for each subsequence, we first extracted sliding windows of size $w_\mathrm{fft}$ and 50\% overlap (features extraction on windows with 50\% overlap has demonstrated success in previous work \cite{Bao:PC2004}). Then we did FFT on all windows. Finally, we calculated the magnitude of all first $(w_\mathrm{fft}/2 + 1)$ coefficients and used the average values over all windows as the frequency domain features for the subsequence. Because readings were from 3 directions, we have $(w_\mathrm{fft}/2 + 1)\times 3$ values for frequency domain features per subsequence.
