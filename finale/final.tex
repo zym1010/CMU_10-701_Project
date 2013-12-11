@@ -176,18 +176,18 @@ The two tricky features introduced above help teams to gain satisfactory scores 
 
 Once the key features are extracted, we move on to leverage various kinds of classifiers and optimize their parameters for more accurate results.
 
-After preprocessing and feature extraction, for each original sequence, we now had several feature vectors associated with it. These vectors were used for classification. For testing, the average of prediction results of all feature vectors associated with a test sequence was used for submission.
+After preprocessing and feature extraction, for each original sequence, we now had several feature vectors associated with it. These vectors were used for classification. For each vector, we let the classifer output the probability (belief) that it comes from device $i$ ($i=1,\ldots,387$). Then, the average of beliefs of all feature vectors associated with a test sequence on the proposed DeviceId was used for submission.
 
-We start from some naive classifiers. The performance of K-Nearest-Neighbor depends on the number of K and the definition of distance function. This classifier gave us a baseline result. Then we moved on to popular classifiers such as support vector machines and logistic regression. We will also investigate the impact of the parameters of these classifiers in the following sections about implementation.
+We started from some naive classifiers. The performance of K-nearest-neighbor depends on the number of K and the definition of distance function. This classifier gave us a baseline result. Then we moved on to popular classifiers such as support vector machines and logistic regression. We will also investigated the impact of the parameters of these classifiers in the following sections about implementation.
 
 
 \section{Implementation and Evaluation}
-In this section we show how our approach performed. We will justify the selection of parameters for preprocessing. We will also show the impact of quantity of training data and different features on results. We hope this could tell us how to prevent leakage of our identity by controlling how much and what kind of accelerometer data to exploit.
+In this section we show how our approach performed. We will justify the selection of parameters for preprocessing. We will also show the impact of quantity of training data and different features on results. We hope this could tell us how much training data is required to achieve an acceptable performance, and more importantly, how to prevent leakage of our identity by controlling what kind of accelerometer data to use.
 
 \subsection{Evaluation methods and metrics}
-We adopt the online judging system of Kaggle for fairness. It could also demonstrate how our approach performs against other teams all over the world. 
+We used the online judging system of Kaggle for fairness. It could also demonstrate how our approach performed against other teams all over the world. 
 
-The system takes results generated from our classifier as input. For the results, our classifier needs to produce the belief of each sequence and the tagged device id with it. Then, the system produces value of area under the ROC curve (AUC) as the score. The baseline of AUC is 0.5 which stands for purely random guesses. The higher AUC value it is, the better classifier we have. A result with AUC of value 1 stands for perfect guess. 
+The system took results generated from our classifier as input. Then, the system produced value of area under the ROC curve (AUC) as the score. The baseline of AUC is 0.5 which stands for purely random guesses. A higher AUC value means a better classifier. A result with AUC of 1 stands for perfect guess. 
 
 \subsection{Parameter selection}
 In this subsection we discuss how to determine the parameters and thresholds we defined in the previous sections.
@@ -229,18 +229,20 @@ Figure \ref{fig:FFTAUC} shows the results for different frequency granularities.
 Since there was no substantial difference for choices of granularity, in the following experiments, we just used 3 features (the shortest among all feature vectors we tested) for each axis as FFT features (also known as ``Feature \#1'').
 
 \subsection{Tuning classifier}
-Our preliminary results show that naive K-nearest-neighbor algorithm leads to really poor results which achieve less than 0.6 in AUC. Although there is an important parameter, number of neighbors, for KNN, we simply skipped the optimization of KNN for its poor performance and for its time-consuming computation.
+Our preliminary results showed that Euclidean norm K-nearest-neighbor algorithm leads to really poor results which achieved less than 0.6 in AUC. Although $k$ and the metric could be changed, we simply abandoned KNN for its poor performance and its time-consuming computation.
 
-We use logistic classifier as one of our main options. The only parameter can be tuned in this classifier is $C$ (in LIBLINEAR) as the regularization factor of logistic regression. It turns out that our features and data were not sensitive to the value of $C$ (no matter what combination of features used, AUC only fluctuated by about 0.0002). Therefore, we just used $C=1$.
+We use logistic classifier as one of our main options. The only parameter can be tuned in this classifier is $C$ (in LIBLINEAR) as the regularization parameter of logistic regression. It turns out that our features and data were not sensitive to the value of $C$ (no matter what combination of features used, AUC only fluctuated by about 0.0002). Therefore, we just used $C=1$.
 
-We also tried support vector machine classifier. As it was very time-consuming, we only tested $C=1, g=1$ (LIBSVM) for a SVM with a Gaussian kernel.
-
+We also tried support vector machine classifier. As it was very time-consuming, we only tested $C=1, \gamma=1$ (LIBSVM) for a SVM with a Gaussian kernel.
 
 \subsection{Results}
 
+Here we present the performance of our classifers. For convenience, we denoted the 6 kinds of features used as Feature \#1 to Feature \#6, corresponding the order they appear in the section of feature extraction. First, we show the performance of classifers using all 6 features. Second, results for different combinations of features are given. Last, results under different amounts of training data are shown.
 
-According to the rules of this competition, classification results were judged on area under the ROC curve. The classifiers we used are k-nearest neighbors, SVM with Gaussian kernel (using LIBSVM) and $L_2$-regularized logistic regression (using LIBLINEAR). The results along with the competition baseline provided by Kaggle (kNN, with the mean of all accelerometer readings as the feature vector for each device in the training set, and the the mean of all readings as the feature vector for each sequence in the testing test), is shown in Table~\ref{tbl:test_result}. For k-nearest neighbors (k-NN-FFT in the table), only the frequency domain features were used, with $k=40$. For SVM with Gaussian kernel, $C=1, \gamma=1$ was used in LIBSVM. For logistic regression (LR-3 in the table), $C=2$ was used in LIBLINEAR.
+\subsubsection{All features} % (fold)
+\label{ssub:all_features}
 
+% subsubsection all_features (end)
 
 \begin{table}[!ht]
 \caption{Testing results of four methods}
@@ -256,7 +258,21 @@ According to the rules of this competition, classification results were judged o
 	\end{center}
 \end{table}
 
+
+
 The best results from our approach ranks top 8\% out of 634 teams on Kaggle. Although, the top teams reach over 0.99 of AUC for this competition, the tricky features mentioned in previous section boost the accuracy a lot. According to the online discussion, simply using tricky features to distinguish and identify sensors could achieve the ideal results. Although the competition became a game of cheating as it suffers from ``leaks'', as quoted from one of the best teams, we, who did not take effort to leverage leaks, show that reasonable features, which are obtainable in real world, also leads to promising results.
+
+
+\subsubsection{Combinations of features} % (fold)
+\label{ssub:combinations_of_features}
+
+% subsubsection combinations_of_features (end)
+
+
+\subsubsection{The impact of amount of training data on performance} % (fold)
+\label{ssub:the_impact_of_amount_of_training_data_on_performance}
+
+% subsubsection the_impact_of_amount_of_training_data_on_performance (end)
 
 \section{Privacy Control}
 In this section we look beyond the competition for a more meaningful and emergent topic, privacy. Results of our approach and others show that using acceleration information, the identity of a person could be easily leaked to others via the mobile devices surrounding us. Before anyone come up with evil ideas based on it, we are urgent to know how much data we can give out before our identities are compromised and in what form the data we provide is safer than other form.
