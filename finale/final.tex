@@ -263,14 +263,19 @@ Here, all resuls on reported using all 6 kinds of features, in Table \ref{tbl:te
 \label{ssub:combinations_of_features}
 Results using different combinations of features are reported in Figure \ref{fig:feature}. Only logistic regression was used for classification.
 
-
-
-
 % subsubsection combinations_of_features (end)
 
 
 \subsubsection{The impact of amount of training data on performance} % (fold)
 \label{ssub:the_impact_of_amount_of_training_data_on_performance}
+Results using different amounts of training data are shown in Figure \ref{fig:percentage}. We reduce the size of training data by randomly selecting a portion of all training feature vectors, each vector corresponding to a split and re-sampled subsequence. Note that because Features \#5 and \#6 were not generated based on the subsequence, only Features \#1 to \#4 were used in this test. Again, only logistic regression was used.
+
+\begin{figure}
+    \centering
+    \includegraphics[height=40mm]{fig/percentage.eps}\\
+    \caption{AUCs vs percentage of training data using logistic regression.}
+    \label{fig:percentage}
+ \end{figure}
 
 % subsubsection the_impact_of_amount_of_training_data_on_performance (end)
 
@@ -292,28 +297,6 @@ Then we study how the quantity of data impacts the AUC. We vary the size of trai
 
 \section{Conclusion and Future Work}
 
-
-\begin{figure}
-    \hspace{-0.5cm}
-    \begin{minipage}[t]{0.02\textwidth}~
-    \end{minipage}
-    \begin{minipage}[t]{0.47\textwidth}
-    \centering
-    \includegraphics[height=40mm]{fig/feature_svm.eps}
-    \caption{AUCs vs categories of features used in a SVM classifier. We only use 10 \% of the whole data for all-feature AUC as it is too time-consuming.}
-    \label{fig:feature_svm}
-    \end{minipage}
-    \begin{minipage}[t]{0.02\textwidth}~
-    \end{minipage}
-    \begin{minipage}[t]{0.47\textwidth}
-    \centering
-    \includegraphics[height=40mm]{fig/percentage.eps}\\
-    \caption{AUCs vs percentage of data using logistic regression.}
-    \label{fig:percentage}
-    \end{minipage}
-    \begin{minipage}[t]{0.02\textwidth}~
-    \end{minipage}%   
- \end{figure}
 
 We have learned a few things from this project besides a better understanding of machine learning itself as our classifier identifies users well. First, the assumption that human beings have patterns of movement is true. Second, both time domain and frequency domain features help this technique. Third, we have the preliminary knowledge of how to control the leakage of acceleration data to protect our privacy against such technique. By limiting both type and quantity of acceleration data, different goals for protection can be achieved. Furthermore, we can now forecast that applications such as anti-theft, health monitoring and emergency detection that adopt this novel identification technique will be available in the near future.
 
