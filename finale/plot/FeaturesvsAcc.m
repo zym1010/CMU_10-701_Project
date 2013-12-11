@@ -67,6 +67,12 @@ set(h(5),'facecolor',LINE_COLOR_6)
 
 
 
+for i=1:10
+  text(0.6+(i-1)*0.08,Y(1,i)+0.005,num2str(Y(1,i))) ;
+end
+
+
+
 %% =====================================================================
 % conigure legend
 hL= legend('Feature #1','Feature #2','Feature #3','Feature #4','#2+#3','#2+#4','#3+#4','#2+#3+#4', '#5+#6','All','location','northwest')
@@ -101,7 +107,7 @@ set(hT, 'FontSize', FONT_SIZE_TITLE);
 
 box on;
 hold off;
-export_fig feature -eps -transparent;
+export_fig feature -pdf -transparent;
 
 %% =====================================================================
 % end

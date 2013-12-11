@@ -216,7 +216,7 @@ However, such fine granularity in frequency domain (2.5/32 Hz between components
     \end{minipage}
     \begin{minipage}[t]{0.47\textwidth}
     \centering
-    \includegraphics[height=40mm]{fig/feature.eps}\\
+    \includegraphics[height=40mm]{fig/feature}\\
     \caption{AUCs vs combinations of features using logistic regression.}
     \label{fig:feature}
     \end{minipage}
@@ -278,8 +278,8 @@ Results using different amounts of training data are shown in Figure \ref{fig:pe
  \end{figure}
 
 % subsubsection the_impact_of_amount_of_training_data_on_performance (end)
-\subsection{Miscellaneous results using SVM}  % (fold)
-\label{sub:miscellaneous}
+\subsubsection{Miscellaneous results using SVM}  % (fold)
+\label{subs:miscellaneous}
 Because using SVM was very time-consuming, we only tested under several conditions, and the results are shown in \ref{tbl:test_result_SVM}.
 
 \begin{table}[!ht]
@@ -298,15 +298,21 @@ Because using SVM was very time-consuming, we only tested under several conditio
 
 % subsection miscellaneous (end)
 
-\subsubsection{Analysis} % (fold)
-\label{ssub:analysis}
+\subsection{Analysis} % (fold)
+\label{sub:analysis}
 
-% subsubsection analysis (end)
+% subsection analysis (end)
 
-The best results from our approach ranks top 8\% out of 634 teams on Kaggle. Although, the top teams reach over 0.99 of AUC for this competition, the tricky features mentioned in previous section boost the accuracy a lot. According to the online discussion, simply using tricky features to distinguish and identify sensors could achieve the ideal results. 
+The best result from our approach ranked top 8\% out of 634 teams on Kaggle. Although, the top teams reach over 0.99 of AUC for this competition, the tricky features mentioned in previous section boost the accuracy a lot. According to the online discussion, simply using tricky features to distinguish and identify sensors could achieve the ideal results. This was also partially proved by our result using Features \#5 and \#6 in \ref{fig:feature}, which is just a little behind the result using all features. When using all features, clearly logistic regression was far better than other options. Although the parameter of SVM wasn't thoroughly tuned due to time limit, we tried some parameters of SVM and emperically they didn't make significant improvement for SVM. K-nearest-neighbor was the worst of all three, and we didn't work on that any more, again, because tuning it was time-consuming and seemed hopeless to improve the result.
+
+The results in Figure \ref{fig:feature} may suggest two things. 1) Histogram features (\#2-\#4) are more informative than FFT features (\#1) in this task, and they are also ``safer'' (see next section for detail) in terms of protecting user's real trajectory. 2) Tricky features (\#5, \#6) are very useful in this competition, but its usefullness in reality may be limited, e.g. when all devices are the same or very similar.
 
 
-Although the competition became a game of cheating as it suffers from ``leaks'', as quoted from one of the best teams, we, who did not take effort to leverage leaks, show that reasonable features, which are obtainable in real world, also leads to promising results.
+The results in Figure \ref{fig:percentage} suggest two things. 1) The training dataset provided by Kaggle is somewhat redundant, since in the range from 30\% to 100\%, there was only a slight and gradual decrease in accuracy. 2) We don't need too much data or time for this task, since emperically there was no much difference between the performance using 20\% data and the one using all data, and training can be done rather quickly (it only took about 10 seconds to train 20\% of all training data on a 12-core server), making training on mobile devices possible. Note that these results were generated based on only one random selection of training data, so there's sampling error in it, but we think the general relationship between performance and amount of training data should not change if more random selections were done.
+
+Results in Table \ref{tbl:test_result_SVM} were just a partial evluation of SVM for this task. However, two things seem true. 1) With high-dimensionality feature vectors (all 6 kinds of features), SVM with Gaussian kernel seemed to perform a lot worse than linear methods (0.80701 using SVM vs. 0.90761 using LR). 2) SVM with Gaussian kernel seems to perform better than linear methods with shorter feature vectors and smaller data set (0.85112 using SVM vs. 0.84816 using LR, using Feautures \#1 to \#4 and 10\% of data).
+
+Although the competition became a game of cheating as it suffers from ``leaks'', as quoted from one of the best teams, we, who did not take effort to leverage leaks, show that reasonable features, which are obtainable in real world, also lead to promising results.
 
 
 \section{Privacy Control}
@@ -320,8 +326,6 @@ Besides identity, exploiting the raw traces of acceleration make a person even m
 
 The results are shown in figure\ref{fig:feature} and figure\ref{fig:feature_svm}. We use various of combinations of features for the evaluation. The number of features are consistent with the sequence in section\ref{feautures}. Feature \#1 is the frequency domain feature.  Feature \#4 has the best solo-feature classifier. We can achieve over 0.85 for combining features 2, 3 and 4 in a logistic classifier. For the SVM classifier, as it is too time-consuming, we only tried limited combinations and for the full-featured one we only applied 10\% of data on it. These results indicates that 1.using safe features achieves reasonable accuracy for permitted identification without the risk for exploiting more privacy, 2.even exploiting the difference of acceleration or distribution of it still has the risk of make one's identification out of control.
 
-
-Then we study how the quantity of data impacts the AUC. We vary the size of training data by changing the percentage of data we use. The result is shown in figure\ref{fig:percentage}. The figure shows that when we have a larger training dataset, the AUC, as well as accuracy, increases. The value of AUC increases rapidly within the range between 0.1\% to 10\%. AUC still increases but slows down when a larger dataset is applied. When only 0.1\% of the whole dataset is used, the AUC value is only above 0.7 compared to the baseline of AUC, 0.5. This result indicates that limiting the amount of acceleration data exploited can significantly reduce the accuracy of identification and hence protect the privacy. Meanwhile, we can also find out that the dataset Kaggle provided is somewhat redundant.
 
 
 \section{Conclusion and Future Work}
