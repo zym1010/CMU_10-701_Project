@@ -46,7 +46,7 @@ Yimeng Zhang \\
 \maketitle
 
 \begin{abstract}
-The purpose of this project was to develop a method for classifying cellphone users based on acceleration data and to discuss how to identify users without leaking their privacy. Raw acceleration data was segmented based on timestamp. Re-sampling was performed to unify the format of samples. After the preprocessing steps, six sets of features were extracted from raw and re-sampled data. For the classification task, three classifiers (k-NN, SVM and logistic regression) were applied. The best performing classifier got 0.907 using area under the ROC (Receiver Operating Characteristic) curve. A quantitative analysis of user privacy issue was conducted based on types of features extracted.
+The purpose of this project was to develop a method for classifying cellphone users based on acceleration data and to discuss how to identify users without leaking their privacy. Raw acceleration data was segmented based on timestamp. Re-sampling was performed to unify the format of samples. Six sets of features were extracted from raw and re-sampled data. Three classifiers (k-NN, SVM and logistic regression) were applied. The best performing classifier got 0.907 using area under the ROC curve. A quantitative analysis of user privacy issue was conducted based on types of features extracted.
 %As cellphones and other smart devices are closer to our daily life than ever, we are curious to know how the data gathered by accelerometers on them impact our lives, particularly in terms of identifying users of devices via such data. In this project, we try to answer this question with machine learning techniques. We first studied how to implement such biometric techniques by retrieving useful identification information from raw accelerometer data. We then built classifiers with these information. At last we investigated in what way and how much of our privacy leaks through this technique via cellphones. We hope this work could show how such techniques impact our lives.
 \end{abstract}
 
@@ -54,13 +54,11 @@ The purpose of this project was to develop a method for classifying cellphone us
 
 \subsection{Motivation}
 
-Ubiquitous computing had never been so close to us as our phones become smarter and more powerful today. Sensors equipped in our cellphones like GPS, gyroscope, accelerometer can facilitate many useful applications. How to retrieve more information from the raw sensor data is one of the hottest and promising topics today.
+Ubiquitous computing had never been so close to us as our phones become smarter and more powerful today. Sensors equipped in our cellphones like GPS, gyroscope, accelerometer can facilitate many useful applications. How to retrieve more information from sensor data is one hottest topic today.
 
-Accelerometer is one of the most interesting sensors in our cellphone, which records the acceleration data in 3D. In this project, we tried to explore a novel usage of the accelerometer: biometric identification. In other words, can we identify the user by only their movement? We believe that everyone has a unique pattern of movement. If this assumption is true, we can identify the person when we match the current accelerometer data with the historical data we have learned. 
+Accelerometer is one interesting sensor in our cellphone. In this project, we tried to explore biometric identification using accelerometer. In other words, can we identify the user by only their movement? If everyone has a unique pattern of movement, we can identify the person when we match the current accelerometer data with the historical data we have learned. 
 
-In this project, we chose the already available dataset gathered by Kaggle. Due to the poor quality of the raw data, we first performed preprocessing to normalize data for easier feature extraction. . By trying 3 different classifers on 6 kinds of features, we have got a score of over 0.90 in terms of area under the ROC curve, which is satisfactory, although further improvement is still needed.
-
-Furthermore, we studied how the features we used impacted the accuracy of identification. These results help us understand what leaks our private information and how to stop it.
+We chose the already available dataset from Kaggle. We first performed preprocessing to normalize data for easier feature extraction. By trying 3 different classifiers on 6 kinds of features, we have got a score of over 0.90 in terms of area under the ROC curve, which is satisfactory, although further improvement is still needed. Furthermore, we studied how the features we used impacted the accuracy of identification. These results help us understand what leaks our private information and how to prevent it.
 
 \subsection{Related Work} 
 
@@ -74,24 +72,22 @@ Pan et al.\cite{Pan:EL2009} proposed algorithm based on signature points, instea
 
 Kwapisz et al.\cite{Kwapisz:BTAS2009} collect some data and also perform identification experiments. Based on the 600 raw accelerometer readings, they generated 43 features, which are variations of 6 basic features including average acceleration value, standard deviation, time between peaks and so on. They applied two classification techniques decision trees neural networks to classify and the identification performance turned out to be fairly good.
 
-User identification is a controversial area. There is a great deal of research being investigated to mitigate the privacy and security risks of user information. Some of these projects focus on keeping sensed data such as location information private \cite{Cho:ISA2004}, while other projects are designing devices that can act as secure keys for providing and receiving personal information \cite{Zhu:PCC2006}. 
+User identification is a controversial area. There is a great deal of research being done to mitigate the privacy and security risks of user information. Some of these projects focus on keeping sensor data such as location information private \cite{Cho:ISA2004}, while other projects are designing devices that can act as secure keys for providing and receiving personal information \cite{Zhu:PCC2006}. 
 
-E. Vildjiounaite, et al.\cite{Vildjiounaite:PC2006} present a combination of accelerometer-based gait recognition and speaker recognition as an unobtrusive and only marginally privacy-threatening means of verifying the identity of the user of a mobile device. They believe these two biometric modalities are not perceived as privacy-threatening in the same way as conventional biometrics (e.g. fingerprint recognition) or the continuous image processing required for frequent face recognition.
+E. Vildjiounaite et al.\cite{Vildjiounaite:PC2006} present a combination of accelerometer-based gait recognition and speaker recognition as an unobtrusive and only marginally privacy-threatening means of verifying the identity of the user of a mobile device. They believe these two biometric modalities are not perceived as privacy-threatening in the same way as conventional biometrics (e.g. fingerprint recognition) or the continuous image processing required for frequent face recognition.
 
 \section{Information on the Kaggle Competition}
 \subsection{Raw data}
-The dataset provided by the Kaggle competition \href{http://www.kaggle.com/c/accelerometer-biometric-competition}{``Accelerometer Biometric Competition''}. The dataset consisted of 3 parts: a training set, a testing set and a question set. Each single sample point in training and testing sets contained a time stamp in milliseconds, acceleration measurements in 3 dimensions, and an associated DeviceId (for the training set) or a SequenceId (for the testing set). 
-
-In the training set, there were 30 million labled samples from 387 devices. These samples were demarcated into 387 segments, each containing samples for a single device. In the testing data set, there were also about 30 million samples without label. These samples were demarcated into 90,024 sequences of 300 points, each with a SequenceId. In the question set, for each SequenceId, there was a proposed DeviceId.
+The dataset provided by the Kaggle competition \href{http://www.kaggle.com/c/accelerometer-biometric-competition}{``Accelerometer Biometric Competition''}. The dataset consisted of 3 parts: a training set, a testing set and a question set. Each single sample point in training and testing sets contained a time stamp in milliseconds, acceleration measurements in 3D, and an associated DeviceId (for the training set) or a SequenceId (for the testing set). In the training set, there were 30 million labeled samples from 387 devices. These samples were demarcated into 387 segments, each containing samples for a single device. In the testing data set, there were also about 30 million samples without label. These samples were demarcated into 90,024 sequences of 300 points, each with a SequenceId. In the question set, for each SequenceId, there was a proposed DeviceId.
 
 \subsection{Evaluation}
-The task on Kaggle was to tell whether each sequence's proposed DeviceId was the sequence's real DeviceId. For each sequence, we were required to give a belief about the credibility of the proposed DeviceId. For more detail, please refer to the competition website as listed above. We use the Kaggle online judging system, which output the area under the ROC curve as the score for a submission.
+The task on Kaggle was to tell whether each sequence's proposed DeviceId was the sequence's real DeviceId. For each sequence, we were required to give a belief about the credibility of the proposed DeviceId. The area under the ROC curve as the score was used to evaluate performance. For more detail, please refer to the competition website as listed above.
 
 \section{Methods}
 In this section, we describe the methods we used for preprocessing, feature extraction, and classification.
 
 \subsection{Preprocessing}
-Two problems with the raw dataset need to be tackled before further processing: 1) the accelerometer data was not properly segmented; 2) the accelerometer readings were not uniformly sampled. Regarding these problems, segmentation and re-sampling were performed respectively.
+Two problems with the raw dataset need to be tackled before further processing: 1) the accelerometer data was not properly segmented; 2) the accelerometer readings were not uniformly sampled. Therefore, segmentation and re-sampling were performed respectively.
 
 \begin{figure}
     \hspace{-0.5cm}
@@ -117,11 +113,9 @@ Two problems with the raw dataset need to be tackled before further processing: 
 
 
 \subsubsection{Segmentation} % (fold)
-For each sequence of acceleration samples in the raw data, the time intervals between two adjacent sample points are less than 500ms for most of the time. However, some intervals can be as large as 100,000ms. This problem is illustrated in Figures \ref{fig:good_raw} and \ref{fig:bad_raw}. In the first sequence, all sample points are close in time, and they can be treated as representing a single activity. In the second, there are two points with a large time difference. Thus, we can consider this sequence containing information about two separate activities. It is clear that we cannot consider the second sequence as representing a single activity. %This could be attributed to two 
+For each sequence of samples in the raw data, the time intervals between two adjacent sample points are less than 500 ms for most of the time. However, some intervals can be as large as 100,000 ms. This is illustrated in Figures \ref{fig:good_raw} and \ref{fig:bad_raw}. In the first sequence, all  points are close in time, and they can be treated as representing a single activity. In the second, there are two points with a large time difference. Thus, we can consider this sequence containing information about two separate activities. It is clear that we cannot process this sequence as a whole. %This could be attributed to two 
 
-To tackle this, a two-phase segmentation was performed to split each sequence into subsequences. In the first phase, the sequences time intervals larger than $T_\mathrm{split}$ were split, resulting in several subsequences for each original sequence. In the second phase, we continually split the longest subsequence among all the subsequences until 1) we got $k_\mathrm{\#seq}$ subsequences, or 2) the longest subsequence was shorter than $2 l_\mathrm{maxL}$. Also, sequences shorter than $T_\mathrm{short}$ were thrown. We did the second-phase segmentation because after the first-phase, some resultant sequences were too short (less than 1000 ms) so that not much reliable features could be extracted, and some were too long (longer than 100 seconds) so that it might contain information about multiple activities of the user.
-
-In this manner, on the one hand, we make more sequences from one device, hopefully keeping more information about the device's diverse patterns. On the other hand, we keep the sequences long enough, so that they contain reliable information about patterns of the user.
+To tackle this, a two-phase segmentation was performed. First, the sequences with time intervals larger than $T_\mathrm{split}$ were split, resulting in several subsequences for each original sequence. Second, we continually split the longest subsequence among all the subsequences until 1) we got $k_\mathrm{\#seq}$ subsequences, or 2) the longest one was shorter than $2 l_\mathrm{maxL}$. Also, sequences shorter than $T_\mathrm{short}$ were thrown. After segmentation, on the one hand, we make more sequences from one device, hopefully keeping more information about the device's diverse patterns. On the other hand, we keep the sequences long enough, so that they contain reliable information about patterns of the user.
 
 \subsubsection{Re-sampling} 
 After segmentation, for each device, we got several subsequences. However, these sequences were not uniformly sampled, due to various reasons. To make feature extraction simpler, we interpolated each segment using cubic spline and uniformly re-sampled each sequence with  $\tau_\mathrm{resample}$ being the re-sampling time interval.
@@ -161,9 +155,9 @@ The two tricky features introduced above help teams to gain satisfactory scores 
 
 Once the key features are extracted, we move on to leverage various kinds of classifiers and optimize their parameters for more accurate results.
 
-After preprocessing and feature extraction, for each original sequence, we now had several feature vectors associated with it. These vectors were used for classification. For each vector, we let the classifer output the probability (belief) that it comes from device $i$ ($i=1,\ldots,387$). Then, the average of beliefs of all feature vectors associated with a test sequence on the proposed DeviceId was used for submission.
+After preprocessing and feature extraction, for each original sequence, we now had several feature vectors associated with it. These vectors were used for classification. For each vector, we let the classifier output the probability (belief) that it comes from device $i$ ($i=1,\ldots,387$). Then, the average of beliefs of all feature vectors associated with a test sequence on the proposed DeviceId was used for submission.
 
-We started from some naive classifiers. The performance of K-nearest-neighbor depends on the number of K and the definition of distance function. This classifier gave us a baseline result. Then we moved on to popular classifiers such as support vector machines and logistic regression. We will also investigated the impact of the parameters of these classifiers in the following sections about implementation.
+We started from some naive classifiers. The performance of K-nearest-neighbor depends on the number of K and the definition of distance function. This classifier gave us a baseline result. Then we moved on to popular classifiers such as support vector machines and logistic regression. We also investigated the impact of the parameters of these classifiers in the following sections about implementation.
 
 
 \section{Implementation and Evaluation}
@@ -178,13 +172,13 @@ The system took results generated from our classifier as input. Then, the system
 In this subsection we discuss how to determine the parameters and thresholds we defined in the previous sections.
 
 
-\subsubsection{Default values}
+\subsubsection{Preprocessing}
 $T_\mathrm{split}$ was set to be 10 seconds to be consistent with the preprocessing setting done by Kaggle.  $T_\mathrm{short}$ and $l_\mathrm{maxL}$ were both set to be 4.8 seconds for the training set and 3.2 seconds for the testing set empirically. $\tau_\mathrm{resample}$ was set to be 200 milliseconds based on statistics of the distribution of the time intervals of the raw data, but any value near 200 ms should be a reasonable choice. The window size of FFT, $w_\mathrm{fft}$, was 64, which meant a window of duration 12.8 seconds. For training, $k_\mathrm{\#seq}=50$; for testing, $k_\mathrm{\#seq}=5$.
 
 \subsubsection{Frequency domain granularity}
-One of the important parameters is the number of samples for FFT. The resampling was taken at 200ms. So, FFT features describes the data’s frequency components from 0Hz to 1/0.2/2 = 2.5Hz. With original 64 point FFT, the frequency components are spaced at 2.5/32 Hz. 
+One of the important parameters is the number of samples for FFT. The re-sampling was taken at 200ms. So, FFT features describes the data's frequency components from 0Hz to 1/0.2/2 = 2.5Hz. With original 64 point FFT, the frequency components are spaced at 2.5/32 Hz. 
 
-However, such fine granularity in frequency domain (2.5/32 Hz between components) may not necessarily lead to better results. Some of these components can be highly correlated and so be redundant and even lead to worse performance. We wanted to investigate how the granularity of these features affect the performance. To do this, we first did 96 point FFT (48+1 featuress per axis) and 64 point FFT (32+1 features per axis) on each sequence. Then we downsampled these features by only keeping every 2-, 4-, 8-, and 16-th components, so that we had 10 different sets of FFT features for each sequence, covering the frequency from 0Hz to 2.5Hz, but at different granularities.
+However, such fine granularity in frequency domain (2.5/32 Hz between components) may not necessarily lead to better results. Some of these components can be highly correlated and so be redundant and even lead to worse performance. We wanted to investigate how the granularity of these features affect the performance. To do this, we first did 96 point FFT (48+1 features per axis) and 64 point FFT (32+1 features per axis) on each sequence. Then we down-sampled these features by only keeping every 2-, 4-, 8-, and 16-th components, so that we had 10 different sets of FFT features for each sequence, covering the frequency from 0Hz to 2.5Hz, but at different granularities.
 
 
 \begin{figure}
@@ -194,7 +188,7 @@ However, such fine granularity in frequency domain (2.5/32 Hz between components
     \begin{minipage}[t]{0.47\textwidth}
     \centering
     \includegraphics[height=40mm]{fig/fftauc.eps}
-    \caption{AUC vs granularity of features in frequencey domain. Only frequency domain features are used with logistic regression.}
+    \caption{AUC vs granularity of features in frequency domain. Only frequency domain features are used with logistic regression.}
     \label{fig:FFTAUC}
     \end{minipage}
     \begin{minipage}[t]{0.02\textwidth}~
@@ -222,7 +216,7 @@ We also tried support vector machine classifier. As it was very time-consuming, 
 
 \subsection{Results}
 
-Here we present the performance of our classifers. For convenience, we denoted the 6 kinds of features used as Feature \#1 to Feature \#6, corresponding the order they appear in the section of feature extraction. First, we show the performance of classifers using all 6 features. Second, results for different combinations of features are given. Last, results under different amounts of training data are shown.
+Here we present the performance of our classifiers. For convenience, we denoted 6 kinds of features used as Feature \#1 to Feature \#6, corresponding the order they appear in the section of feature extraction. First, we show the performance of classifiers using all 6 features. Second, results for different combinations of features are given. Last, results under different amounts of training data are shown.
 
 \subsubsection{All features} % (fold)
 \label{ssub:all_features}
@@ -288,7 +282,7 @@ Because using SVM was very time-consuming, we only tested under several conditio
 
 % subsection analysis (end)
 
-The best result from our approach ranked top 8\% out of 634 teams on Kaggle. Although, the top teams reach over 0.99 of AUC for this competition, the tricky features mentioned in previous section boost the accuracy a lot. According to the online discussion, simply using tricky features to distinguish and identify sensors could achieve the ideal results. This was also partially proved by our result using Features \#5 and \#6 in \ref{fig:feature}, which is just a little behind the result using all features. When using all features, clearly logistic regression was far better than other options. Although the parameter of SVM wasn't thoroughly tuned due to time limit, we tried some parameters of SVM and emperically they didn't make significant improvement for SVM. K-nearest-neighbor was the worst of all three, and we didn't work on that any more, again, because tuning it was time-consuming and seemed hopeless to improve the result.
+The best result from our approach ranked top 8\% out of 634 teams on Kaggle. Although, the top teams reach over 0.99 of AUC for this competition, the tricky features mentioned in previous section boost the accuracy a lot. According to the online discussion, simply using tricky features to distinguish and identify sensors could achieve the ideal results. This was also partially proved by our result using Features \#5 and \#6 in \ref{fig:feature}, which is just a little behind the result using all features. When using all features, clearly logistic regression was far better than other options. Although the parameter of SVM wasn't thoroughly tuned due to time limit, we tried some parameters of SVM and empirically they didn't make significant improvement for SVM. K-nearest-neighbor was the worst of all three, and we didn't work on that any more, again, because tuning it was time-consuming and seemed hopeless to improve the result.
 
 The results in Figure \ref{fig:feature} may suggest two things. 1) Histogram features (\#2-\#4) are more informative than FFT features (\#1) in this task, and they are also ``safer'' (see next section for detail) in terms of protecting user's real trajectory. 2) Tricky features (\#5, \#6) are very useful in this competition, but its usefullness in reality may be limited, e.g. when all devices are the same or very similar.
 
@@ -308,11 +302,9 @@ To protect user privacy, features which may cause privacy leak were eliminated (
 
 Classification performance was tested on using all features against using Features \#2 to \#4 using the best performing logistic regression classifier. As shown in Figure~\ref{fig:feature}, comparable results were gained by restricted features. The classifier using only Features \#2 to \#4 got 0.867 AUC compared to the 0.908 AUC got from all features. Thus, using our classifier with restricted features, we can have satisfactory identification accuracy while protecting users' privacy.
 
-However, we noticed that even when we use just Features \#2 to \#4, we are facing the risk of privacy leak because features like the difference of acceleration or distributions of acceleration may to some extent reveal user's activity (trajectory). For example, a sequence of acceleration sampled when a user is sitting will certainly have acceleration distributions differing from that of one sampled when the user is running.
+However, we noticed that even when we use just Features \#2 to \#4, we are facing the risk of privacy leak because features like the difference of acceleration or distributions of acceleration may to some extent reveal user's activity (trajectory). For example, a sequence of acceleration sampled when a user is sitting will certainly have acceleration distributions differing from that of one sampled when the user is running. Also we noticed that, device dependent features (Features \#5 and \#6) were very successful in this competition (Figure~\ref{fig:feature}). Although these feature can only reveal device type, it is still possible that these information may compromise privacy.
 
-Also we noticed that, device dependent features (Features \#5 and \#6) were very successful in this competition (Figure~\ref{fig:feature}). Although these feature can only reveal device type, it is still possible that these information may compromise privacy.
-
-Here are some possible ways to further protect user privacy: 1) Applying certain hashing technologies (e.g.\ locality-sensitive hashing) to the features extracted from the raw data will be helpful for protecting privacy when we have enough confidence in the classifier. 2) It would be helpful if the mobile phone manufacturers can perform ``normalization'' on the output of accelerometers and even other sensors based on one standard. Having a standard output form can prevent the leakage of the type of device users have.
+Here are some possible ways to further protect user privacy: 1) Applying certain hashing technologies (e.g.\ locality-sensitive hashing) to the features extracted from the raw data will be helpful for protecting privacy. 2) It would be helpful if the mobile phone manufacturers can perform ``normalization'' on the output of accelerometers and even other sensors based on one standard. Having a standard output form can prevent the leakage of the type of device users have.
 
 \section{Conclusion and Future Work}
 
