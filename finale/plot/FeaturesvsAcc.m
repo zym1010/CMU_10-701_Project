@@ -41,7 +41,7 @@ LEGEND_POSITION = 4;
 
 %X = [1,2,3,4,5,6]
 
-Y = [0.809 0.81384 0.82646 0.84136 0.83940 0.85215 0.85658 0.86695 0.90761;0 0 0 0 0 0 0 0 0 ];
+Y = [0.809 0.81384 0.82646 0.84136 0.83940 0.85215 0.85658 0.86695 0.89437 0.90761 ;0 0 0 0 0 0 0 0 0 0];
 
 
 %E = [2 2;2 2; 3 2; 4 2; 4 3;4 3]./200
@@ -69,7 +69,7 @@ set(h(5),'facecolor',LINE_COLOR_6)
 
 %% =====================================================================
 % conigure legend
-hL= legend('Feature #1','Feature #2','Feature #3','Feature #4','#2+#3','#2+#4','#3+#4','#2+#3+#4','All','location','northwest')
+hL= legend('Feature #1','Feature #2','Feature #3','Feature #4','#2+#3','#2+#4','#3+#4','#2+#3+#4', '#5+#6','All','location','northwest')
 legend(hL, 'boxoff');
 
 
@@ -87,7 +87,7 @@ set(hA, 'YGrid', FLAG_GRID_Y);
 % set(hA, 'YColor', [1,0,1]);
 
 % set(hA, 'XTickLabel',{'one';'two';'three'});
-set(gca,'XTickLabel',{' ','Logistic', ''})
+set(gca,'XTickLabel',{'','','',' ','Logistic', '',''})
 %hX = xlabel(LABEL_X);
 hY = ylabel(LABEL_Y);
 %set(hX, 'FontSize', FONT_SIZE_LABEL);
