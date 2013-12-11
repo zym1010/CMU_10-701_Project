@@ -19,7 +19,7 @@ Zexi Mao\\
 \And
 Siqi Tan \\
 \texttt{siqitan@andrew.cmu.edu} \\
-\AND
+\And
 Yuchen Wu\\
 \texttt{yuchenw@cs.cmu.edu} \\
 \And
@@ -77,10 +77,10 @@ User identification is a controversial area. There is a great deal of research b
 E. Vildjiounaite et al.\cite{Vildjiounaite:PC2006} present a combination of accelerometer-based gait recognition and speaker recognition as an unobtrusive and only marginally privacy-threatening means of verifying the identity of the user of a mobile device. They believe these two biometric modalities are not perceived as privacy-threatening in the same way as conventional biometrics (e.g. fingerprint recognition) or the continuous image processing required for frequent face recognition.
 
 \section{Information on the Kaggle Competition}
-\subsection{Raw data}
+\paragraph{Raw data}
 The dataset provided by the Kaggle competition \href{http://www.kaggle.com/c/accelerometer-biometric-competition}{``Accelerometer Biometric Competition''}. The dataset consisted of 3 parts: a training set, a testing set and a question set. Each single sample point in training and testing sets contained a time stamp in milliseconds, acceleration measurements in 3D, and an associated DeviceId (for the training set) or a SequenceId (for the testing set). In the training set, there were 30 million labeled samples from 387 devices. These samples were demarcated into 387 segments, each containing samples for a single device. In the testing data set, there were also about 30 million samples without label. These samples were demarcated into 90,024 sequences of 300 points, each with a SequenceId. In the question set, for each SequenceId, there was a proposed DeviceId.
 
-\subsection{Evaluation}
+\paragraph{Evaluation}
 The task on Kaggle was to tell whether each sequence's proposed DeviceId was the sequence's real DeviceId. For each sequence, we were required to give a belief about the credibility of the proposed DeviceId. The area under the ROC curve as the score was used to evaluate performance. For more detail, please refer to the competition website as listed above.
 
 \section{Methods}
@@ -112,12 +112,12 @@ Two problems with the raw dataset need to be tackled before further processing: 
  \end{figure}
 
 
-\subsubsection{Segmentation} % (fold)
+\paragraph{Segmentation} % (fold)
 For each sequence of samples in the raw data, the time intervals between two adjacent sample points are less than 500 ms for most of the time. However, some intervals can be as large as 100,000 ms. This is illustrated in Figures \ref{fig:good_raw} and \ref{fig:bad_raw}. In the first sequence, all  points are close in time, and they can be treated as representing a single activity. In the second, there are two points with a large time difference. Thus, we can consider this sequence containing information about two separate activities. It is clear that we cannot process this sequence as a whole. %This could be attributed to two 
 
 To tackle this, a two-phase segmentation was performed. First, the sequences with time intervals larger than $T_\mathrm{split}$ were split, resulting in several subsequences for each original sequence. Second, we continually split the longest subsequence among all the subsequences until 1) we got $k_\mathrm{\#seq}$ subsequences, or 2) the longest one was shorter than $2 l_\mathrm{maxL}$. Also, sequences shorter than $T_\mathrm{short}$ were thrown. After segmentation, on the one hand, we make more sequences from one device, hopefully keeping more information about the device's diverse patterns. On the other hand, we keep the sequences long enough, so that they contain reliable information about patterns of the user.
 
-\subsubsection{Re-sampling} 
+\paragraph{Re-sampling} 
 After segmentation, for each device, we got several subsequences. However, these sequences were not uniformly sampled, due to various reasons. To make feature extraction simpler, we interpolated each segment using cubic spline and uniformly re-sampled each sequence with  $\tau_\mathrm{resample}$ being the re-sampling time interval.
 
 \subsection{Feature extraction}
@@ -125,26 +125,26 @@ After segmentation, for each device, we got several subsequences. However, these
 
 After preprocessing, for each raw sequence (from training set or testing set), we got several shorter re-sampled subsequences. In this section, we describe how to extract features from each subsequence. Six categories of features were investigated. They represent different aspects of patterns from the data.
 
-\subsubsection{Frequency domain features}
+\paragraph{Frequency domain features}
 As different people has their own pace for actions, we believe the patterns of human mobility can be easily exploited in frequency domain. To this end, for each subsequence, we first extracted sliding windows of size $w_\mathrm{fft}$ and 50\% overlap (features extraction on windows with 50\% overlap has demonstrated success in previous work \cite{Bao:PC2004}). Then we did FFT on all windows. Finally, we calculated the magnitude of all first $(w_\mathrm{fft}/2 + 1)$ coefficients and used the average values over all windows as the frequency domain features for the subsequence. Because readings were from 3 directions, we have $(w_\mathrm{fft}/2 + 1)\times 3$ values for frequency domain features per subsequence.
 
-\subsubsection{Differences of acceleration}
+\paragraph{Differences of acceleration}
 More patterns and properties were discovered when we look beyond frequency domain. One obvious feature is the absolute difference between two adjacent readings of acceleration \cite{Kwapisz:BTAS2009}. This feature measures how rapidly a person usually handles the phone or moves. It may also indicate the environment this person lives. The distribution of such differences was taken as the features in this category. Specifically, we computed three histograms (30 bins each histogram, edges of leftmost and rightmost bins determined by the 5\% and 95\% quantiles of absolute differences for each axis) of absolute differences between every adjacent pair of readings on three axes for each sequence as its features. 
 
-\subsubsection{Resultant acceleration}
+\paragraph{Resultant acceleration}
 The value of each reading alone can also imply useful information. The resultant acceleration \cite{Kwapisz:BTAS2009}, which is defined as $\sqrt{x^2+y^2+z^2}$ ($x,y,z$ are readings at a particular time), directly evaluates the absolute value of the acceleration of the device. This value reveals how hard a person usually moves as the force is proportional to the acceleration it measures. The distribution of resultant acceleration is the third feature we used. Same as mentioned above, the histogram (prepared in the same way as the previous feature) of this value was produced for each sequence as one category of its features.
 
-\subsubsection{Histogram of acceleration readings}
+\paragraph{Histogram of acceleration readings}
 Inspired by the above features, distribution of acceleration readings each of three dimensions can also be informative. For example, a phone may lie on a desk if the reading of its reading for z axis (the axis perpendicular to the screen) is more likely to be 9.8 $\mathrm{m}\cdot \mathrm{s}^{-2}$ (gravity), while another phone's reading for y axis is larger when it is always kept in one's pocket. Three histograms (prepared in the same way as the previous two features) were generated for every sequence.
 
 The above four sets of features were what we mainly focused on. There were also many tricky features which could help us a lot to have a better score in the competition. However, these features could be useless in real world applications. 
 
-\subsubsection{Raw sampling rate}
+\paragraph{Raw sampling rate}
 As the mobile devices people use are increasingly diverse, the characteristics of different devices offer us a set of very distinguishing features for recognizing users. One of these characteristics was the sampling intervals of the devices.
 
 As we observed from the raw data set, sampling intervals of devices has a range of approximately 5-250 ms, and for different devices, the distributions of the sampling intervals were quite different. Thus, for each subsequence, we used the histogram (0-600 ms divided into bins of 20 ms, in total 30 values) of the sampling intervals of the original sequence it came from as the time domain features. 
 
-\subsubsection{Sampling granularity}
+\paragraph{Sampling granularity}
 Apart from the sampling intervals of devices, we found another set of features with potential ability of distinguishing devices, which was the accelerometer readings.
 
 By observing the data, we found that each kind of device could only provide certain discrete values of accelerometer readings, and this might be due to the limited precision of accelerometers. Thus, the set of accelerometer readings a device can provide is also treated as a set of features. For each subsequence, we calculated the overlap between the the set of readings from the original sequence it came from and the set of readings from the $i$th device, $i=1,\ldots,387$. Since we had readings from 3 directions, $3\times 387 = 1161$ values constituted the accelerometer reading features for each subsequence.
@@ -218,7 +218,7 @@ We also tried support vector machine classifier. As it was very time-consuming, 
 
 Here we present the performance of our classifiers. For convenience, we denoted 6 kinds of features used as Feature \#1 to Feature \#6, corresponding the order they appear in the section of feature extraction. First, we show the performance of classifiers using all 6 features. Second, results for different combinations of features are given. Last, results under different amounts of training data are shown.
 
-\subsubsection{All features} % (fold)
+\paragraph{All features} % (fold)
 \label{ssub:all_features}
 Here, all resuls on reported using all 6 kinds of features, in Table \ref{tbl:test_result}.
 % subsubsection all_features (end)
@@ -238,14 +238,14 @@ Here, all resuls on reported using all 6 kinds of features, in Table \ref{tbl:te
 \end{table}
 
 
-\subsubsection{Combinations of features} % (fold)
+\paragraph{Combinations of features} % (fold)
 \label{ssub:combinations_of_features}
 Results using different combinations of features are reported in Figure \ref{fig:feature}. Only logistic regression was used for classification.
 
 % subsubsection combinations_of_features (end)
 
 
-\subsubsection{The impact of amount of training data on performance} % (fold)
+\paragraph{The impact of amount of training data on performance} % (fold)
 \label{ssub:the_impact_of_amount_of_training_data_on_performance}
 Results using different amounts of training data are shown in Figure \ref{fig:percentage}. We reduce the size of training data by randomly selecting a portion of all training feature vectors, each vector corresponding to a split and re-sampled subsequence. Note that because Features \#5 and \#6 were not generated based on the subsequence, only Features \#1 to \#4 were used in this test. Again, only logistic regression was used.
 
@@ -257,7 +257,7 @@ Results using different amounts of training data are shown in Figure \ref{fig:pe
  \end{figure}
 
 % subsubsection the_impact_of_amount_of_training_data_on_performance (end)
-\subsubsection{Miscellaneous results using SVM}  % (fold)
+\paragraph{Miscellaneous results using SVM}  % (fold)
 \label{subs:miscellaneous}
 Because using SVM was very time-consuming, we only tested under several conditions, and the results are shown in \ref{tbl:test_result_SVM}.
 
