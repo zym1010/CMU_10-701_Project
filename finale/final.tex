@@ -278,8 +278,8 @@ Results using different amounts of training data are shown in Figure \ref{fig:pe
  \end{figure}
 
 % subsubsection the_impact_of_amount_of_training_data_on_performance (end)
-\subsection{Miscellaneous results using SVM}  % (fold)
-\label{sub:miscellaneous}
+\subsubsection{Miscellaneous results using SVM}  % (fold)
+\label{subs:miscellaneous}
 Because using SVM was very time-consuming, we only tested under several conditions, and the results are shown in \ref{tbl:test_result_SVM}.
 
 \begin{table}[!ht]
@@ -298,12 +298,15 @@ Because using SVM was very time-consuming, we only tested under several conditio
 
 % subsection miscellaneous (end)
 
-\subsubsection{Analysis} % (fold)
-\label{ssub:analysis}
+\subsection{Analysis} % (fold)
+\label{sub:analysis}
 
-% subsubsection analysis (end)
+% subsection analysis (end)
 
-The best results from our approach ranks top 8\% out of 634 teams on Kaggle. Although, the top teams reach over 0.99 of AUC for this competition, the tricky features mentioned in previous section boost the accuracy a lot. According to the online discussion, simply using tricky features to distinguish and identify sensors could achieve the ideal results. 
+The best result from our approach ranked top 8\% out of 634 teams on Kaggle. Although, the top teams reach over 0.99 of AUC for this competition, the tricky features mentioned in previous section boost the accuracy a lot. According to the online discussion, simply using tricky features to distinguish and identify sensors could achieve the ideal results. This was also partially proved by our result using Features \#5 and \#6 in \ref{fig:feature}, which is just a little behind the result using all features. When using all features, clearly logistic regression was far better than other options. Although the parameter of SVM wasn't thoroughly tuned due to time limit, we tried some parameters of SVM and emperically they didn't make significant improvement for SVM. K-nearest-neighbor was the worst of all three, and we didn't work on that any more, again, because tuning it was time-consuming and seemed hopeless to improve the result.
+
+The results in Figure \ref{fig:feature} may suggest two things. 1) Histogram features (\#2-\#4) are more informative than FFT features (\#1) in this task, and they are also ``safer'' (see next section for detail) in terms of protecting user's real trajectory. 2) Tricky features (\#5, \#6) are very useful in this competition, but its usefullness in reality may be limited, e.g. when all devices are the same or very similar.
+
 
 
 Although the competition became a game of cheating as it suffers from ``leaks'', as quoted from one of the best teams, we, who did not take effort to leverage leaks, show that reasonable features, which are obtainable in real world, also leads to promising results.
