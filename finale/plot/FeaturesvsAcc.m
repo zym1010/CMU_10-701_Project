@@ -107,7 +107,7 @@ set(hT, 'FontSize', FONT_SIZE_TITLE);
 
 box on;
 hold off;
-export_fig feature -eps -transparent;
+export_fig feature -pdf -transparent;
 
 %% =====================================================================
 % end
