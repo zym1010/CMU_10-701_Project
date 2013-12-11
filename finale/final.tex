@@ -278,10 +278,35 @@ Results using different amounts of training data are shown in Figure \ref{fig:pe
  \end{figure}
 
 % subsubsection the_impact_of_amount_of_training_data_on_performance (end)
+\subsection{Miscellaneous results using SVM}  % (fold)
+\label{sub:miscellaneous}
+Because using SVM was very time-consuming, we only tested under several conditions, and the results are shown in \ref{tbl:test_result_SVM}.
+
+\begin{table}[!ht]
+\caption{AUCs for different conditions, using SVM}
+\label{tbl:test_result_SVM}
+    \begin{center}
+        \begin{tabular}{ c | c  c  c  }
+            \hline
+             Features & All & only \#1 & \#1 + \#2 + \#3 +\#4 (10\% training data) \\
+             \hline
+             AUC & 0.80701 & 0.81406 & \textbf{0.85112} \\
+             \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+% subsection miscellaneous (end)
+
+\subsubsection{Analysis} % (fold)
+\label{ssub:analysis}
+
+% subsubsection analysis (end)
+
+The best results from our approach ranks top 8\% out of 634 teams on Kaggle. Although, the top teams reach over 0.99 of AUC for this competition, the tricky features mentioned in previous section boost the accuracy a lot. According to the online discussion, simply using tricky features to distinguish and identify sensors could achieve the ideal results. 
 
 
-
-The best results from our approach ranks top 8\% out of 634 teams on Kaggle. Although, the top teams reach over 0.99 of AUC for this competition, the tricky features mentioned in previous section boost the accuracy a lot. According to the online discussion, simply using tricky features to distinguish and identify sensors could achieve the ideal results. Although the competition became a game of cheating as it suffers from ``leaks'', as quoted from one of the best teams, we, who did not take effort to leverage leaks, show that reasonable features, which are obtainable in real world, also leads to promising results.
+Although the competition became a game of cheating as it suffers from ``leaks'', as quoted from one of the best teams, we, who did not take effort to leverage leaks, show that reasonable features, which are obtainable in real world, also leads to promising results.
 
 
 \section{Privacy Control}
