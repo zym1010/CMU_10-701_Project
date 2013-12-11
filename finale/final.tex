@@ -209,7 +209,7 @@ However, such fine granularity in frequency domain (2.5/32 Hz between components
     \begin{minipage}[t]{0.47\textwidth}
     \centering
     \includegraphics[height=40mm]{fig/fftauc.eps}
-    \caption{AUC vs granularity of features in frequencey domain. Only frequency domain features are used with a logistic classifier. }
+    \caption{AUC vs granularity of features in frequencey domain. Only frequency domain features are used with logistic regression.}
     \label{fig:FFTAUC}
     \end{minipage}
     \begin{minipage}[t]{0.02\textwidth}~
@@ -217,19 +217,19 @@ However, such fine granularity in frequency domain (2.5/32 Hz between components
     \begin{minipage}[t]{0.47\textwidth}
     \centering
     \includegraphics[height=40mm]{fig/feature.eps}\\
-    \caption{AUCs vs categories of features used in a logistic classifier. }
+    \caption{AUCs vs combinations of features using logistic regression.}
     \label{fig:feature}
     \end{minipage}
     \begin{minipage}[t]{0.02\textwidth}~
     \end{minipage}%   
  \end{figure}
 
-Figure \ref{fig:FFTAUC} shows the results for different frequency granularities. We only applied frequency domain features on our tuned logistic classifier. The result indicates that feature vectors of length 17 to 33 perform better than smaller or greater ones on average. We can also find that neither smaller nor larger number of features performed significantly worse than the optimal ones. This fact means fine-grained feature extraction cannot exploit much more independent features than the coarse-grained ones. The reasons could be: 1) patterns of human movement do not have strong regularity on the frequencies (0 Hz to 2.5 Hz) we investigated. 2) accelerometer is not sensitive enough to gather that many useful features. 3) the features there are useful in theory, but noise due to accelerometer and other factors is also strong in that frequency range. If we have devices better than cellphone in terms of sensitivity and noise reduction, we may better explain this phenomenon.
+Figure \ref{fig:FFTAUC} shows the results for different frequency granularities. We only applied frequency domain features on logistic regression. The result indicates that feature vectors of length 17 to 33 perform better than smaller or greater ones on average. We can also find that neither smaller nor larger number of features performed significantly worse than the optimal ones. This fact means fine-grained feature extraction cannot exploit much more independent features than the coarse-grained ones. The reasons could be: 1) patterns of human movement do not have strong regularity on the frequencies (0 Hz to 2.5 Hz) we investigated. 2) accelerometer is not sensitive enough to gather that many useful features. 3) the features there are useful in theory, but noise due to accelerometer and other factors is also strong in that frequency range. If we have devices better than cellphone in terms of sensitivity and noise reduction, we may better explain this phenomenon.
 
 Since there was no substantial difference for choices of granularity, in the following experiments, we just used 3 features (the shortest among all feature vectors we tested) for each axis as FFT features (also known as ``Feature \#1'').
 
 \subsection{Tuning classifier}
-Our preliminary results showed that Euclidean norm K-nearest-neighbor algorithm leads to really poor results which achieved less than 0.6 in AUC. Although $k$ and the metric could be changed, we simply abandoned KNN for its poor performance and its time-consuming computation.
+Our preliminary results showed that L2-norm K-nearest-neighbor algorithm ($k=40$) leads to really poor results which achieved less than 0.6 in AUC. Although $k$ and the metric could be changed, we simply abandoned KNN for its poor performance and its time-consuming computation.
 
 We use logistic classifier as one of our main options. The only parameter can be tuned in this classifier is $C$ (in LIBLINEAR) as the regularization parameter of logistic regression. It turns out that our features and data were not sensitive to the value of $C$ (no matter what combination of features used, AUC only fluctuated by about 0.0002). Therefore, we just used $C=1$.
 
@@ -241,30 +241,30 @@ Here we present the performance of our classifers. For convenience, we denoted t
 
 \subsubsection{All features} % (fold)
 \label{ssub:all_features}
-
+Here, all resuls on reported using all 6 kinds of features, in Table \ref{tbl:test_result}.
 % subsubsection all_features (end)
 
 \begin{table}[!ht]
-\caption{Testing results of four methods}
+\caption{AUCs for different classifers, using all kinds of features}
 \label{tbl:test_result}
 	\begin{center}
-		\begin{tabular}{ c | c  c  c  c }
+		\begin{tabular}{ c | c  c  c  }
 			\hline
-			 Methods & k-NN-Mean (baseline) & k-NN-FFT & SVM & LR-3 \\
+			 Methods & L2-norm KNN & SVM & LR \\
 			 \hline
-			 AUC & 0.50277 & 0.58590 & 0.85112 & \textbf{0.90761} \\
+			 AUC & 0.58302 & 0.80701 & \textbf{0.90761} \\
 			 \hline
 		\end{tabular}
 	\end{center}
 \end{table}
 
 
-
-The best results from our approach ranks top 8\% out of 634 teams on Kaggle. Although, the top teams reach over 0.99 of AUC for this competition, the tricky features mentioned in previous section boost the accuracy a lot. According to the online discussion, simply using tricky features to distinguish and identify sensors could achieve the ideal results. Although the competition became a game of cheating as it suffers from ``leaks'', as quoted from one of the best teams, we, who did not take effort to leverage leaks, show that reasonable features, which are obtainable in real world, also leads to promising results.
-
-
 \subsubsection{Combinations of features} % (fold)
 \label{ssub:combinations_of_features}
+Results using different combinations of features are reported in Figure \ref{fig:feature}. Only logistic regression was used for classification.
+
+
+
 
 % subsubsection combinations_of_features (end)
 
@@ -273,6 +273,11 @@ The best results from our approach ranks top 8\% out of 634 teams on Kaggle. Alt
 \label{ssub:the_impact_of_amount_of_training_data_on_performance}
 
 % subsubsection the_impact_of_amount_of_training_data_on_performance (end)
+
+
+
+The best results from our approach ranks top 8\% out of 634 teams on Kaggle. Although, the top teams reach over 0.99 of AUC for this competition, the tricky features mentioned in previous section boost the accuracy a lot. According to the online discussion, simply using tricky features to distinguish and identify sensors could achieve the ideal results. Although the competition became a game of cheating as it suffers from ``leaks'', as quoted from one of the best teams, we, who did not take effort to leverage leaks, show that reasonable features, which are obtainable in real world, also leads to promising results.
+
 
 \section{Privacy Control}
 In this section we look beyond the competition for a more meaningful and emergent topic, privacy. Results of our approach and others show that using acceleration information, the identity of a person could be easily leaked to others via the mobile devices surrounding us. Before anyone come up with evil ideas based on it, we are urgent to know how much data we can give out before our identities are compromised and in what form the data we provide is safer than other form.
@@ -303,7 +308,7 @@ Then we study how the quantity of data impacts the AUC. We vary the size of trai
     \begin{minipage}[t]{0.47\textwidth}
     \centering
     \includegraphics[height=40mm]{fig/percentage.eps}\\
-    \caption{AUCs vs percentage of data used in a logistic classifier. }
+    \caption{AUCs vs percentage of data using logistic regression.}
     \label{fig:percentage}
     \end{minipage}
     \begin{minipage}[t]{0.02\textwidth}~
